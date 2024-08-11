@@ -16,20 +16,47 @@
       // Separate script tag as this code must be defined after the HTML has been rendered
       function copyCodeToClipboard() {
         const code = document.getElementById("oauth-code").textContent;
+        const btn = document.getElementById("oauth-code-button");
+
         navigator.clipboard.writeText(code);
 
-        alert("Copied!");
+        btn.textContent = "✅ copied!";
+
+        setTimeout(() => {
+          btn.textContent = "📋 copy";
+        }, 5000);
       }
     </script>
     <style>
+      html {
+        background-color: #111;
+        color: #fff;
+      }
       body {
         font-family: Arial, sans-serif;
         margin: 2rem;
       }
       code {
-        background-color: #f4f4f4;
         padding: 0.2rem;
         border-radius: 0.2rem;
+      }
+      textarea {
+        width: 100%;
+        max-width: 32rem;
+        height: 5rem;
+        resize: none;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 0.25rem;
+      }
+      button {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 0.25rem;
+        padding: 0.25rem;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -38,28 +65,41 @@
     <ol>
       <li>
         Copy this code (do not share with anyone): <br />
-        <code id="oauth-code"></code>
+        <textarea id="oauth-code"></textarea>
+        <br />
         <button
           type="button"
           aria-label="Copy code to clipboard"
           onclick="copyCodeToClipboard()"
+          id="oauth-code-button"
         >
           📋 copy
         </button>
       </li>
       <li>
-        Go back to Discord and open a <strong>direct message</strong> with the
-        bot and type <code>/code</code> and send the code to the bot.
+        Go back to Discord where the bot is used and use the
+        <code>/code</code> slash command pasting in your code.
       </li>
-      <li>
-        Once you've sent the code, you should receive a message from the bot
-        confirming that you've successfully authenticated.
-      </li>
+      <li>Profit.</li>
     </ol>
+    <p>
+      <em>
+        Once you have used the code, the bot forgets who you are. So you may
+        remove the app from your Osu! account if you like.
+        <a href="https://osu.ppy.sh/home/account/edit" target="_blank">
+          https://osu.ppy.sh/home/account/edit
+        </a>
+      </em>
+    </p>
     <h2>Why do you have to do this?</h2>
     <p>
-      This saves creating a web server to host a callback URL. 🤣 Very cheap,
-      but does the trick.
+      If you know anything about OAuth 2.0, this saves creating a web server to
+      host a callback URL. Very cheap, but does the trick.
+    </p>
+    <p>
+      It isn't the most secure method, but the code can only be used once and
+      with this bot only as the bot has a shared secret between Osu! and itself
+      which is attached to your code.
     </p>
   </body>
 </html>

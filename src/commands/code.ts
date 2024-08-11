@@ -1,8 +1,8 @@
 import { type CommandInteraction, SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
 import { env } from "../env.js";
-import { osuCodeResponseSchema } from "../schemas.js";
-import { getOsuUser } from "../osu.js";
+import { Client as OsuClient } from "osu-web.js";
+import { exchangeOsuOAuth2Code } from "../http.js";
 
 export const code: Command = {
   definition: new SlashCommandBuilder()
@@ -18,28 +18,27 @@ export const code: Command = {
   async execute(interaction: CommandInteraction): Promise<void> {
     const code = interaction.options.get("code", true);
 
-    if (!code) {
+    if (typeof code.value !== "string") {
       return;
     }
 
-    const data = await fetch("https://osu.ppy.sh/oauth/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "Content-Type: application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        client_id: env.OSU_CLIENT_ID,
-        client_secret: env.OSU_CLIENT_SECRET,
-        code: code.value,
-        grant_type: "authorization_code",
-        redirect_uri: env.OSU_REDIRECT_URI.toString(),
-      }),
-    });
+    const result = await exchangeOsuOAuth2Code(
+      code.value,
+      env.OSU_CLIENT_ID,
+      env.OSU_CLIENT_SECRET,
+      env.OSU_REDIRECT_URI,
+    );
 
-    const json = osuCodeResponseSchema.parse(await data.json());
+    if (!result) {
+      await interaction.reply(
+        "There was an error exchanging the code for an access token.",
+      );
 
-    const user = await getOsuUser(json.access_token);
+      return;
+    }
+
+    const osuClient = new OsuClient(result.access_token);
+    const user = await osuClient.users.getSelf();
     const rank = user.rank_history.data.at(-1);
 
     await interaction.reply(`Your rank is ${rank}`);

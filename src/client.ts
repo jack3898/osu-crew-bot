@@ -1,18 +1,16 @@
 import { env } from "./env.js";
 import type { Command } from "./types.js";
 import {
-  Client as DiscordClient,
+  Client,
   REST,
   Routes,
   Collection,
   type ClientOptions,
 } from "discord.js";
 
-export class Client extends DiscordClient {
+export class Bot extends Client {
   constructor(options: ClientOptions) {
     super(options);
-
-    this.rest.setToken(env.DISCORD_TOKEN);
   }
 
   readonly commands = new Collection<PropertyKey, Command>();
@@ -29,6 +27,8 @@ export class Client extends DiscordClient {
    * Publishes all local slash commands registered using registerSlashCommands to Discord's API.
    */
   async publishSlashCommands(): Promise<void> {
+    console.info("Publishing slash commands...");
+
     const route = env.OPTIONAL_DISCORD_GUILD_ID
       ? Routes.applicationGuildCommands(
           env.DISCORD_CLIENT_ID,
@@ -46,6 +46,6 @@ export class Client extends DiscordClient {
       body: this.commands.map((command) => command.definition.toJSON()),
     });
 
-    console.log("Successfully registered slash commands.");
+    console.log("Successfully published slash commands.");
   }
 }

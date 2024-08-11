@@ -15,19 +15,17 @@ export const updateRole: Command = {
   async execute(interaction: CommandInteraction): Promise<void> {
     const searchParams = new URLSearchParams({
       client_id: env.OSU_CLIENT_ID,
-      redirect_uri: env.OSU_REDIRECT_URI.toString(),
+      redirect_uri: env.OSU_REDIRECT_URI,
       response_type: "code",
       scope: "public",
     });
 
-    const osuOAuthUrl = new URL(
-      `https://osu.ppy.sh/oauth/authorize?${searchParams}`,
-    );
+    const osuAuthUrl = `https://osu.ppy.sh/oauth/authorize?${searchParams}`;
 
     const button = new ButtonBuilder()
       .setLabel("Link account")
       .setStyle(ButtonStyle.Link)
-      .setURL(osuOAuthUrl.toString());
+      .setURL(osuAuthUrl);
 
     const actionRow = new ActionRowBuilder().addComponents(button);
 

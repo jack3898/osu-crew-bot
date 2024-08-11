@@ -1,46 +1,23 @@
 import { Events, GatewayIntentBits } from "discord.js";
-import { Client } from "./client.js";
-import { env } from "./env.js";
-import { updateRole } from "./commands/update-role.js";
+import { Bot } from "./client.js";
+import { updateRole } from "./commands/role.js";
 import { code } from "./commands/code.js";
+import { handleReady } from "./events/ready.js";
+import { handleInteractionCreate } from "./events/interactionCreate.js";
 
-const client = new Client({
+const bot = new Bot({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages],
 });
 
-await client.login(env.DISCORD_TOKEN);
+// Make the commands known to the bot
+// New commands should be registered here
+bot.registerSlashCommand(updateRole);
+bot.registerSlashCommand(code);
 
-client.registerSlashCommand(updateRole);
-client.registerSlashCommand(code);
+// Tell the bot what to do when certain events occur
+// New event handlers should be registered here
+bot.on(Events.ClientReady, handleReady);
+bot.on(Events.InteractionCreate, handleInteractionCreate);
 
-await client.publishSlashCommands();
-
-client.on(Events.ClientReady, () => {
-  console.log(`Logged in as ${client.user?.tag}`);
-});
-
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isCommand()) {
-    return;
-  }
-
-  if (!(interaction.client instanceof Client)) {
-    return;
-  }
-
-  const command = interaction.client.commands.get(interaction.commandName);
-
-  if (!command) {
-    return;
-  }
-
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(error);
-    await interaction.reply({
-      content: "There was an error while executing this command.",
-      ephemeral: true,
-    });
-  }
-});
+// Strap things up!
+await Promise.all([bot.login(), bot.publishSlashCommands()]);

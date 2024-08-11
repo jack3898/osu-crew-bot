@@ -4,7 +4,14 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 
 export default [
   { files: ["**/*.{js,mjs,cjs,ts}"] },
+  eslintPluginPrettierRecommended,
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
-  eslintPluginPrettierRecommended,
+  {
+    rules: {
+      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/explicit-function-return-type": "error",
+      "no-duplicate-imports": "error",
+    },
+  },
 ];

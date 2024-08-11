@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OAuth Success</title>
+    <script type="module">
+      // Inject the code into the page
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+
+      document.getElementById("oauth-code").textContent = code;
+    </script>
+    <script>
+      // Copy code to clipboard
+      // Separate script tag as this code must be defined after the HTML has been rendered
+      function copyCodeToClipboard() {
+        const code = document.getElementById("oauth-code").textContent;
+        navigator.clipboard.writeText(code);
+
+        alert("Copied!");
+      }
+    </script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+      }
+      code {
+        background-color: #f4f4f4;
+        padding: 0.2rem;
+        border-radius: 0.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>You're almost done! Just follow these next steps:</h1>
+    <ol>
+      <li>
+        Copy this code (do not share with anyone): <br />
+        <code id="oauth-code"></code>
+        <button
+          type="button"
+          aria-label="Copy code to clipboard"
+          onclick="copyCodeToClipboard()"
+        >
+          📋 copy
+        </button>
+      </li>
+      <li>
+        Go back to Discord and open a <strong>direct message</strong> with the
+        bot and type <code>/code</code> and send the code to the bot.
+      </li>
+      <li>
+        Once you've sent the code, you should receive a message from the bot
+        confirming that you've successfully authenticated.
+      </li>
+    </ol>
+    <h2>Why do you have to do this?</h2>
+    <p>
+      This saves creating a web server to host a callback URL. 🤣 Very cheap,
+      but does the trick.
+    </p>
+  </body>
+</html>

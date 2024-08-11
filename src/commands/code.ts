@@ -1,14 +1,20 @@
-import { type CommandInteraction, SlashCommandBuilder } from "discord.js";
+import {
+  type CommandInteraction,
+  GuildMember,
+  SlashCommandBuilder,
+} from "discord.js";
 import type { Command } from "../types.js";
 import { env } from "../env.js";
 import { Client as OsuClient } from "osu-web.js";
-import { exchangeOsuOAuth2Code } from "../http.js";
+import { exchangeOsuOAuth2Code } from "../utils/http.js";
+import { getOsuRole } from "../utils/osu-role.js";
+import roles from "../roles.js";
 
 export const code: Command = {
   definition: new SlashCommandBuilder()
     .setName("code")
     .setDMPermission(true)
-    .setDescription("Fetch your role by allowing this bot to read your rank.")
+    .setDescription("Exchange a code")
     .addStringOption((option) =>
       option
         .setName("code")
@@ -41,6 +47,36 @@ export const code: Command = {
     const user = await osuClient.users.getSelf();
     const rank = user.rank_history.data.at(-1);
 
-    await interaction.reply(`Your rank is ${rank}`);
+    if (!rank) {
+      await interaction.reply("There was an error fetching your rank.");
+
+      return;
+    }
+
+    const role = getOsuRole(rank, roles);
+
+    if (!role) {
+      await interaction.reply("There was an error calculating your next role.");
+
+      return;
+    }
+
+    await interaction.reply(
+      `Congratulations! I think you are deserving of <@&${role.id}>!`,
+    );
+
+    // Check the client can manage roles
+    if (!interaction.guild) {
+      return;
+    }
+
+    const member = interaction.member;
+
+    if (
+      interaction.guild.members.me?.permissions.has("ManageRoles") &&
+      member instanceof GuildMember
+    ) {
+      await member.roles.add(role.id);
+    }
   },
 };

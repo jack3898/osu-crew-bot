@@ -19,9 +19,16 @@ export async function handleInteractionCreate(
   } catch (error) {
     console.error(error);
 
-    await interaction.reply({
-      content: "There was an error while executing this command.",
-      ephemeral: true,
-    });
+    if (interaction.replied) {
+      await interaction.followUp({
+        content: "There was an error while completing this command.",
+        ephemeral: true,
+      });
+    } else {
+      await interaction.reply({
+        content: "There was an error while completing this command.",
+        ephemeral: true,
+      });
+    }
   }
 }

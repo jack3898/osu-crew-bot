@@ -2,14 +2,16 @@ import { Events, GatewayIntentBits } from "discord.js";
 import { Client } from "./client.js";
 import { env } from "./env.js";
 import { updateRole } from "./commands/update-role.js";
+import { code } from "./commands/code.js";
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages],
 });
 
 await client.login(env.DISCORD_TOKEN);
 
 client.registerSlashCommand(updateRole);
+client.registerSlashCommand(code);
 
 await client.publishSlashCommands();
 

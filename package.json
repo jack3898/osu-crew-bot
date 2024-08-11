@@ -25,7 +25,8 @@
     "zod": "^3.23.8"
   },
   "dependencies": {
-    "discord.js": "^14.15.3"
+    "discord.js": "^14.15.3",
+    "osu-web.js": "^2.5.0"
   },
   "volta": {
     "node": "22.6.0",

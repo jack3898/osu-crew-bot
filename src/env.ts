@@ -8,6 +8,7 @@ const envSchema = z.object({
   OSU_CLIENT_ID: z.string(),
   OSU_CLIENT_SECRET: z.string(),
   OSU_REDIRECT_URI: z.string(),
+  JWT_SECRET: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;

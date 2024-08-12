@@ -9,6 +9,9 @@ import { Client as OsuClient } from "osu-web.js";
 import { exchangeOsuOAuth2Code } from "../utils/http.js";
 import { getOsuRole } from "../utils/osu-role.js";
 import roles from "../roles.js";
+import { assertBot } from "../utils/assert.js";
+import { jwt } from "../jwt.js";
+import { decodeCode } from "../utils/code.js";
 
 export const code: Command = {
   definition: new SlashCommandBuilder()
@@ -22,14 +25,47 @@ export const code: Command = {
         .setRequired(true),
     ),
   async execute(interaction: CommandInteraction): Promise<void> {
-    const code = interaction.options.get("code", true);
+    const bot = interaction.client;
 
-    if (typeof code.value !== "string") {
+    assertBot(bot);
+
+    // This helps prevent the code from being exchanged by users who haven't started the OAuth2 flow
+    if (!bot.oAuthUsersList.has(interaction.user.id)) {
+      await interaction.reply("Please use the `/role` command first!");
+
+      return;
+    }
+
+    bot.oAuthUsersList.delete(interaction.user.id);
+
+    const userProvidedCode = interaction.options.get("code", true);
+
+    if (typeof userProvidedCode.value !== "string") {
+      return;
+    }
+
+    const { code, state } = decodeCode(userProvidedCode.value);
+
+    if (!code || !state) {
+      await interaction.reply("The provided code is invalid.");
+
+      return;
+    }
+
+    // This JWT cannot be tampered with, as it is signed with a secret only the bot knows
+    // It also contains the user's Discord ID, so we can verify the user exchanging the code to prevent forgery
+    const verifiedState = await jwt.verify(state);
+
+    if (verifiedState.discordUserId !== interaction.user.id) {
+      await interaction.reply(
+        "This code is not for you. Please use the `/role` command for your own account.",
+      );
+
       return;
     }
 
     const result = await exchangeOsuOAuth2Code(
-      code.value,
+      code,
       env.OSU_CLIENT_ID,
       env.OSU_CLIENT_SECRET,
       env.OSU_REDIRECT_URI,

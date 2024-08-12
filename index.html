@@ -8,8 +8,10 @@
       // Inject the code into the page
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
+      const state = urlParams.get("state");
 
-      document.getElementById("oauth-code").textContent = code;
+      document.getElementById("oauth-code").textContent =
+        `${btoa(code)}:${btoa(state)}`;
     </script>
     <script>
       // Copy code to clipboard
@@ -64,7 +66,7 @@
     <h1>You're almost done! Just follow these next steps:</h1>
     <ol>
       <li>
-        Copy this code (do not share with anyone): <br />
+        Copy this magic code: <br />
         <textarea id="oauth-code"></textarea>
         <br />
         <button
@@ -97,9 +99,18 @@
       host a callback URL. Very cheap, but does the trick.
     </p>
     <p>
-      It isn't the most secure method, but the code can only be used once and
-      with this bot only as the bot has a shared secret between Osu! and itself
-      which is attached to your code.
+      Security is important, so if you have any concerns, the code can only:
     </p>
+    <ul>
+      <li>Work for up to 5 minutes</li>
+      <li>
+        Be used solely by this application, Osu! itself will reject it from
+        another app
+      </li>
+      <li>
+        Work only with YOUR Discord account, the bot will reject stolen codes
+      </li>
+      <li>Be used once and once only</li>
+    </ul>
   </body>
 </html>

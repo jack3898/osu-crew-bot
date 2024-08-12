@@ -7,17 +7,27 @@ import {
 } from "discord.js";
 import type { Command } from "../types.js";
 import { env } from "../env.js";
+import { assertBot } from "../utils/assert.js";
+import { jwt } from "../jwt.js";
 
 export const updateRole: Command = {
   definition: new SlashCommandBuilder()
     .setName("role")
     .setDescription("Fetch your role by allowing this bot to read your rank."),
   async execute(interaction: CommandInteraction): Promise<void> {
+    const bot = interaction.client;
+
+    assertBot(bot);
+
     const searchParams = new URLSearchParams({
       client_id: env.OSU_CLIENT_ID,
       redirect_uri: env.OSU_REDIRECT_URI,
       response_type: "code",
       scope: "public",
+      state: await jwt.sign(
+        { discordUserId: interaction.user.id },
+        { expiresIn: "5m" },
+      ),
     });
 
     const osuAuthUrl = `https://osu.ppy.sh/oauth/authorize?${searchParams}`;
@@ -36,5 +46,7 @@ export const updateRole: Command = {
       components: [actionRow],
       ephemeral: true,
     });
+
+    bot.oAuthUsersList.set(interaction.user.id, true);
   },
 };

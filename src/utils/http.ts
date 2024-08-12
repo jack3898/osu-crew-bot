@@ -16,7 +16,7 @@ export async function exchangeOsuOAuth2Code(
   const data = await fetch("https://osu.ppy.sh/oauth/token", {
     method: "POST",
     headers: {
-      "Content-Type": "Content-Type: application/json",
+      "Content-Type": "application/json",
       Accept: "application/json",
     },
     body: JSON.stringify({

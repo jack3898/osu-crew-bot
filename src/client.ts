@@ -1,4 +1,3 @@
-import TTLCache from "@isaacs/ttlcache";
 import { env } from "./env.js";
 import type { Command } from "./types.js";
 import {
@@ -8,6 +7,8 @@ import {
   Collection,
   type ClientOptions,
 } from "discord.js";
+import { OAuthTTL } from "./utils/oauth-ttl.js";
+import TTLCache from "@isaacs/ttlcache";
 
 export class Bot extends Client {
   constructor(options: ClientOptions) {
@@ -16,7 +17,8 @@ export class Bot extends Client {
 
   readonly commands = new Collection<PropertyKey, Command>();
   readonly rest = new REST();
-  oAuthUsersList = new TTLCache<string, boolean>({ ttl: 1000 * 60 * 5 }); // Discord user ID -> boolean
+  readonly oauthState = new OAuthTTL<string>({ ttl: 1000 * 60 * 1 });
+  readonly recentEngagements = new TTLCache<string, boolean>({ ttl: 5_000 });
 
   /**
    * Registers a local slash command to later be published to Discord's API.

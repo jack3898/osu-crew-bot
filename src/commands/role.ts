@@ -19,6 +19,12 @@ export const updateRole: Command = {
 
     assertBot(bot);
 
+    if (!bot.oauthState.valid(interaction.user.id)) {
+      await interaction.reply("Please wait before trying again.");
+
+      return;
+    }
+
     const searchParams = new URLSearchParams({
       client_id: env.OSU_CLIENT_ID,
       redirect_uri: env.OSU_REDIRECT_URI,
@@ -47,6 +53,6 @@ export const updateRole: Command = {
       ephemeral: true,
     });
 
-    bot.oAuthUsersList.set(interaction.user.id, true);
+    bot.oauthState.add(interaction.user.id);
   },
 };

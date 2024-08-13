@@ -30,13 +30,19 @@ export const code: Command = {
     assertBot(bot);
 
     // This helps prevent the code from being exchanged by users who haven't started the OAuth2 flow
-    if (!bot.oAuthUsersList.has(interaction.user.id)) {
+    if (!bot.oauthState.exists(interaction.user.id)) {
       await interaction.reply("Please use the `/role` command first!");
 
       return;
     }
 
-    bot.oAuthUsersList.delete(interaction.user.id);
+    if (!bot.oauthState.valid(interaction.user.id)) {
+      await interaction.reply("Please wait before trying again.");
+
+      return;
+    }
+
+    bot.oauthState.use(interaction.user.id);
 
     const userProvidedCode = interaction.options.get("code", true);
 

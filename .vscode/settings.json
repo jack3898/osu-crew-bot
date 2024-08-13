@@ -12,6 +12,9 @@
   "[html]": {
     "editor.formatOnSave": true
   },
+  "[css]": {
+    "editor.formatOnSave": true
+  },
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.eol": "\n"
 }

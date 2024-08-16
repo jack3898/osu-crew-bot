@@ -2,8 +2,9 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   base: "./",
+  root: "site",
   build: {
-    outDir: "pages",
+    outDir: "../dist",
     emptyOutDir: true,
   },
 });

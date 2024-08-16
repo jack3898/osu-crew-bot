@@ -4,84 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OAuth Success</title>
-    <script type="module" defer>
-      // Inject the code into the page
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code");
-      const state = urlParams.get("state");
-
-      document.getElementById("oauth-code").textContent =
-        `${btoa(code)}:${btoa(state)}`;
-
-      window.addEventListener("load", () => {
-        // Copy code to clipboard
-        window.copyCodeToClipboard = function () {
-          const code = document.getElementById("oauth-code").textContent;
-          const btn = document.getElementById("oauth-code-button");
-
-          navigator.clipboard.writeText(code);
-
-          btn.textContent = "✅ copied!";
-
-          setTimeout(() => {
-            btn.textContent = "📋 copy";
-          }, 5000);
-        };
-      });
-    </script>
+    <script type="module" src="./app/index.tsx"></script>
     <link rel="stylesheet" href="index.css" />
   </head>
-  <body class="px-4 bg-zinc-800 text-white font-sans">
-    <h1 class="text-4xl">You're almost done! Just follow these next steps:</h1>
-    <ol>
-      <li>
-        Copy this magic code: <br />
-        <textarea
-          id="oauth-code"
-          class="block p-1 rounded bg-zinc-700 text-white border-none max-w-96 w-full resize-none my-1"
-          rows="6"
-          disabled
-        ></textarea>
-        <button
-          type="button"
-          aria-label="Copy code to clipboard"
-          onclick="copyCodeToClipboard()"
-          id="oauth-code-button"
-          class="rounded border-none p-1 bg-zinc-700 text-white cursor-pointer my-1"
-        >
-          📋 copy
-        </button>
-      </li>
-      <li>
-        Go back to Discord where the bot is used and use the
-        <code>/code</code> slash command pasting in your code.
-      </li>
-      <li>Profit.</li>
-    </ol>
-    <p>
-      <em>
-        Once you have used the code, the bot forgets who you are. So you may
-        remove the app from your Osu! account if you like.
-      </em>
-    </p>
-    <h2>Why do you have to do this?</h2>
-    <p>
-      If you know anything about OAuth 2.0, this saves creating a web server to
-      host a callback URL. Very cheap, but does the trick.
-    </p>
-    <p>
-      Security is important, so if you have any concerns, the code can only:
-    </p>
-    <ul>
-      <li>Work for up to 5 minutes</li>
-      <li>
-        Be used solely by this application, Osu! itself will reject it from
-        another app
-      </li>
-      <li>
-        Work only with YOUR Discord account, the bot will reject stolen codes
-      </li>
-      <li>Be used once and once only</li>
-    </ul>
+  <body class="bg-zinc-800 text-white font-sans">
+    <div id="root"></div>
   </body>
 </html>

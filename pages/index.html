@@ -4,10 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OAuth Success</title>
-    <script type="module" crossorigin>(function(){const o=document.createElement("link").relList;if(o&&o.supports&&o.supports("modulepreload"))return;for(const e of document.querySelectorAll('link[rel="modulepreload"]'))c(e);new MutationObserver(e=>{for(const t of e)if(t.type==="childList")for(const r of t.addedNodes)r.tagName==="LINK"&&r.rel==="modulepreload"&&c(r)}).observe(document,{childList:!0,subtree:!0});function s(e){const t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),e.crossOrigin==="use-credentials"?t.credentials="include":e.crossOrigin==="anonymous"?t.credentials="omit":t.credentials="same-origin",t}function c(e){if(e.ep)return;e.ep=!0;const t=s(e);fetch(e.href,t)}})();const i=new URLSearchParams(window.location.search),d=i.get("code"),a=i.get("state");document.getElementById("oauth-code").textContent=`${btoa(d)}:${btoa(a)}`;window.addEventListener("load",()=>{window.copyCodeToClipboard=function(){const n=document.getElementById("oauth-code").textContent,o=document.getElementById("oauth-code-button");navigator.clipboard.writeText(n),o.textContent="✅ copied!",setTimeout(()=>{o.textContent="📋 copy"},5e3)}});
-</script>
-    <style rel="stylesheet" crossorigin>.my-1{margin-top:.25rem;margin-bottom:.25rem}.block{display:block}.w-full{width:100%}.max-w-96{max-width:24rem}.cursor-pointer{cursor:pointer}.resize-none{resize:none}.rounded{border-radius:.25rem}.border-none{border-style:none}.bg-zinc-700{--tw-bg-opacity: 1;background-color:rgb(63 63 70 / var(--tw-bg-opacity))}.bg-zinc-800{--tw-bg-opacity: 1;background-color:rgb(39 39 42 / var(--tw-bg-opacity))}.p-1{padding:.25rem}.px-4{padding-left:1rem;padding-right:1rem}.font-sans{font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji"}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-white{--tw-text-opacity: 1;color:rgb(255 255 255 / var(--tw-text-opacity))}
-</style>
+    <script type="module" crossorigin src="/assets/index-DkR4DAFO.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CFVOJe9f.css">
   </head>
   <body class="px-4 bg-zinc-800 text-white font-sans">
     <h1 class="text-4xl">You're almost done! Just follow these next steps:</h1>

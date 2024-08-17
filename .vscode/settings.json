@@ -15,6 +15,9 @@
   "[css]": {
     "editor.formatOnSave": true
   },
+  "[markdown]": {
+    "editor.formatOnSave": true
+  },
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.eol": "\n"
 }

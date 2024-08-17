@@ -30,6 +30,8 @@ export function MagicCode(): ReactElement {
     const state = urlParams.get("state");
 
     if (!code || !state) {
+      textareaRef.current!.textContent = "Invalid code or state";
+
       return;
     }
 

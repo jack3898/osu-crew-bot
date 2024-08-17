@@ -1,0 +1,14 @@
+{
+  "name": "pages",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "start": "node --env-file .env dist/index.js ",
+    "lint": "eslint src",
+    "type-check": "tsc --noEmit"
+  },
+  "author": "Jack Wright <githubcontact@sec.jackwmail.com>",
+  "license": "GPL-3.0-only"
+}

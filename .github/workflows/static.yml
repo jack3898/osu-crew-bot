@@ -38,11 +38,11 @@ jobs:
         with:
           node-version: "22"
       - run: npm install
-      - run: npm run publish
+      - run: npm run build -w pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: './pages/dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

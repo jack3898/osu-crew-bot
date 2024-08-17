@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
-import { MagicCode } from "./components/MagicCode.js";
-import { Code } from "./components/Code.js";
+import { MagicCode } from "./components/MagicCode";
+import { Code } from "./components/Code";
 
 function App(): ReactElement {
   return (

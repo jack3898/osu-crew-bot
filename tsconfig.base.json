@@ -7,10 +7,6 @@
     "exactOptionalPropertyTypes": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
-    "jsx": "react-jsx",
-    "rootDir": "src",
-    "outDir": "dist"
-  },
-  "include": ["src"],
-  "exclude": ["dist"]
+    "noUnusedParameters": true
+  }
 }

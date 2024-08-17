@@ -7,11 +7,14 @@ import type { Command } from "../types.js";
 import { env } from "../env.js";
 import { Client as OsuClient } from "osu-web.js";
 import { exchangeOsuOAuth2Code } from "../utils/http.js";
-import { getOsuRole } from "../utils/osu-role.js";
-import roles from "../roles.js";
 import { assertBot } from "../utils/assert.js";
 import { jwt } from "../jwt.js";
 import { decodeCode } from "../utils/code.js";
+import { RoleCalculator } from "../utils/role-calculator.js";
+
+const roleCalculator = new RoleCalculator(
+  env.DISCORD_OSU_RANK_ROLE_MAPPINGS_URL,
+);
 
 export const code: Command = {
   definition: new SlashCommandBuilder()
@@ -95,16 +98,16 @@ export const code: Command = {
       return;
     }
 
-    const role = getOsuRole(rank, roles);
+    const roleId = await roleCalculator.getDiscordRoleWithOsuRank(rank);
 
-    if (!role) {
+    if (!roleId) {
       await interaction.reply("There was an error calculating your next role.");
 
       return;
     }
 
     await interaction.reply(
-      `Congratulations! I think you are deserving of <@&${role.id}>!`,
+      `Congratulations! I think you are deserving of <@&${roleId}>!`,
     );
 
     // Check the client can manage roles
@@ -118,7 +121,7 @@ export const code: Command = {
       interaction.guild.members.me?.permissions.has("ManageRoles") &&
       member instanceof GuildMember
     ) {
-      await member.roles.add(role.id);
+      await member.roles.add(roleId);
     }
   },
 };

@@ -9,6 +9,7 @@ const envSchema = z.object({
   OSU_CLIENT_SECRET: z.string(),
   OSU_REDIRECT_URI: z.string(),
   JWT_SECRET: z.string(),
+  DISCORD_OSU_RANK_ROLE_MAPPINGS_URL: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -1,8 +1,19 @@
 import type { GuildMember } from "discord.js";
-import { readFile } from "fs/promises";
+import { template } from "../utils/template.js";
 
-const message = await readFile("src/intro.md");
+const message = template`# Welcome to our server **${"username"}**!
+
+I'll keep this message short. Thanks for joining the server, good to have you! 🎉
+
+**Want to show off your rank?**
+I can have a little peek at your Osu! account 🔍👀 and assign you one I find most appropriate, great for if you want to show off.
+Just type \`/role\` in a text channel to get started!
+
+See you around! 👋
+
+_I will not send any further DM's unless it is required._
+`;
 
 export function guildMemberAdd(member: GuildMember): void {
-  member.send(message.toString("utf-8"));
+  member.send(message({ username: member.user.username }));
 }

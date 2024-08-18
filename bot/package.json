@@ -7,7 +7,8 @@
     "build": "tsc",
     "start": "node --env-file ../.env dist/index.js ",
     "lint": "eslint src",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "vitest"
   },
   "author": "Jack Wright <githubcontact@sec.jackwmail.com>",
   "license": "GPL-3.0-only"

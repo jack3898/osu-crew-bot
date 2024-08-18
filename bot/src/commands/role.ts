@@ -47,7 +47,7 @@ export const updateRole: Command = {
 
     await interaction.reply({
       content:
-        "Click the button to link your Osu! account. The bot will not have access to your password.",
+        "Click the button authorize this bot to read your rank. The bot will not have access to your password.",
       // @ts-expect-error - This is a valid interaction reply, but discord.js types are complaining.
       components: [actionRow],
       ephemeral: true,

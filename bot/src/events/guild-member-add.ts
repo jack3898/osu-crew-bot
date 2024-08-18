@@ -1,7 +1,7 @@
 import type { GuildMember } from "discord.js";
 import { template } from "../utils/template.js";
 
-const message = template`# Welcome to our server **${"username"}**!
+const message = template`# Welcome to our server, **${"username"}**!
 
 I'll keep this message short. Thanks for joining the server, good to have you! 🎉
 

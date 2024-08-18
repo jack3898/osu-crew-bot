@@ -14,6 +14,10 @@ See you around! 👋
 _I will not send any further DM's unless it is required._
 `;
 
-export function guildMemberAdd(member: GuildMember): void {
-  member.send(message({ username: member.user.username }));
+export async function guildMemberAdd(member: GuildMember): Promise<void> {
+  try {
+    await member.send(message({ username: member.user.username }));
+  } catch (error) {
+    console.error("Unable to send user an intro DM", error);
+  }
 }

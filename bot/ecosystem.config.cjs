@@ -8,7 +8,7 @@ module.exports = {
   apps: [
     {
       name: "osu-crew-bot",
-      script: "./bot/dist/index.js",
+      script: "./dist/index.js",
       env: {
         DISCORD_TOKEN: "?",
         DISCORD_CLIENT_ID: "?",

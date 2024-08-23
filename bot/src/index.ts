@@ -5,7 +5,6 @@ import { code } from "./commands/code.js";
 import { handleReady } from "./events/ready.js";
 import { handleInteractionCreate } from "./events/interaction-create.js";
 import { guildMemberAdd } from "./events/guild-member-add.js";
-import { db } from "./commands/db.js";
 import { env } from "./env.js";
 
 const bot = new Bot(
@@ -23,7 +22,6 @@ const bot = new Bot(
 // New commands should be registered here
 bot.registerSlashCommand(updateRole);
 bot.registerSlashCommand(code);
-bot.registerSlashCommand(db);
 
 // Tell the bot what to do when certain events occur
 // New event handlers should be registered here

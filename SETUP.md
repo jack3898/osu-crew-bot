@@ -17,12 +17,15 @@ The static SPA is used for OAuth purposes so users can authorize their Osu! acco
 - Generate a long and secure JWT secret token (which can be anything), using a cryptographically secure method.
 - You will need a public hosted role mapping file associating Discord roles IDs with Osu! rank ranges. Please see <a href="https://gist.github.com/jack3898/f879491ff2f770c1f786f152420127f5">this</a> for an example.
 - Copy and rename example.env to .env, and fill in the required fields using the various credentials you have just created.
+- Create a `DATABASE_URL` in your **system** environment variables. If it's local use this as a value `file:<path to file here>`.
 
 ## Setup for production
 
 ### Bot
 
 - `npm install`
+- `npm run db:push -w bot` (to initialize a db)
+- Select `Yes, I want to execute all statements`
 - `npm run build -w bot`
 - `npm run start -w bot`
 
@@ -45,4 +48,13 @@ To test slash commands straight away you will need to define `OPTIONAL_DISCORD_G
 
 - `npm install`
 - `npm run dev -w pages`
+- `npm run db:push -w bot` (to initialize a db)
+- Select `Yes, I want to execute all statements`
 - `npm run dev -w bot`
+
+## Database info
+
+This bot uses Sqlite for the database (so you can use Turso as a cloud host).
+
+Please set `DATABASE_URL` as an environment variable. If you want the db to be a local file, using `file:.data/database.db` is recommended.
+This environment veriable should not be in `.env`, so you will need to set it on your system. This is because this environment variable is read in different contexts, i.e. during migration, pushing and when the bot runs.

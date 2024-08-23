@@ -3,7 +3,7 @@ import { dbUrlSchema } from "./run-migration";
 
 export default defineConfig({
   dialect: "sqlite",
-  schema: "./src/schema.ts",
+  schema: "./src/db-schema.ts",
   out: "./migrations",
   dbCredentials: { url: dbUrlSchema.parse(process.env.DATABASE_URL) },
   verbose: true,

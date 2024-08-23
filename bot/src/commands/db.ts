@@ -12,6 +12,6 @@ export const db: Command = {
 
     const data = await bot.db.select().from(userSchema);
 
-    console.log(data);
+    interaction.reply(JSON.stringify(data));
   },
 };

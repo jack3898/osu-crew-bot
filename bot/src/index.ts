@@ -6,6 +6,7 @@ import { handleReady } from "./events/ready.js";
 import { handleInteractionCreate } from "./events/interaction-create.js";
 import { guildMemberAdd } from "./events/guild-member-add.js";
 import { db } from "./commands/db.js";
+import { env } from "./env.js";
 
 const bot = new Bot(
   {
@@ -15,7 +16,7 @@ const bot = new Bot(
       GatewayIntentBits.GuildMembers,
     ],
   },
-  { url: "file:.data/database.db" },
+  { url: env.DATABASE_URL },
 );
 
 // Make the commands known to the bot

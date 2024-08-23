@@ -9,9 +9,9 @@
     "lint": "eslint src",
     "type-check": "tsc --noEmit",
     "test": "vitest",
-    "migrate": "drizzle-kit generate",
-    "studio": "drizzle-kit studio",
-    "push": "drizzle-kit push"
+    "db:migrate": "drizzle-kit generate",
+    "db:studio": "drizzle-kit studio",
+    "db:push": "drizzle-kit push"
   },
   "author": "Jack Wright <githubcontact@sec.jackwmail.com>",
   "license": "GPL-3.0-only"

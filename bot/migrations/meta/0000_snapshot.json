@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "925758db-95b2-4331-a56e-df12dc78cc8d",
+  "id": "6cbc7604-873a-4e05-8949-17acd4101506",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
@@ -14,8 +14,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "name": {
-          "name": "name",
+        "osu_access_token": {
+          "name": "osu_access_token",
           "type": "text",
           "primaryKey": false,
           "notNull": false,

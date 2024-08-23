@@ -1,4 +1,4 @@
 CREATE TABLE `users` (
 	`id` integer PRIMARY KEY NOT NULL,
-	`name` text
+	`osu_access_token` text
 );

@@ -1,5 +1,5 @@
 import { Client } from "discord.js";
-import type { Bot } from "../client.js";
+import type { Bot } from "../bot.js";
 
 /**
  * This application uses an extended version of the Discord.js Client class.

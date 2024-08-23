@@ -9,16 +9,20 @@ import {
 } from "discord.js";
 import { OAuthTTL } from "./utils/oauth-ttl.js";
 import TTLCache from "@isaacs/ttlcache";
+import { createClient, type Config as LibsqlConfig } from "@libsql/client";
+import { drizzle, type LibSQLDatabase } from "drizzle-orm/libsql";
 
 export class Bot extends Client {
-  constructor(options: ClientOptions) {
+  constructor(options: ClientOptions, dbConfig: LibsqlConfig) {
     super(options);
+    this.db = drizzle(createClient(dbConfig));
   }
 
   readonly commands = new Collection<PropertyKey, Command>();
   readonly rest = new REST();
   readonly oauthState = new OAuthTTL<string>({ ttl: 1000 * 60 * 1 });
   readonly recentEngagements = new TTLCache<string, boolean>({ ttl: 5_000 });
+  readonly db: LibSQLDatabase<Record<string, never>>;
 
   /**
    * Registers a local slash command to later be published to Discord's API.

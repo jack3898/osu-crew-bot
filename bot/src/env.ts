@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const envSchema = z.object({
+export const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production"]),
   DISCORD_TOKEN: z.string(),
   DISCORD_CLIENT_ID: z.string(),
@@ -10,6 +10,7 @@ const envSchema = z.object({
   OSU_REDIRECT_URI: z.string(),
   JWT_SECRET: z.string(),
   DISCORD_OSU_RANK_ROLE_MAPPINGS_URL: z.string(),
+  DATABASE_URL: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;

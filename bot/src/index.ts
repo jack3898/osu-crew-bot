@@ -1,18 +1,22 @@
 import { Events, GatewayIntentBits } from "discord.js";
-import { Bot } from "./client.js";
+import { Bot } from "./bot.js";
 import { updateRole } from "./commands/role.js";
 import { code } from "./commands/code.js";
 import { handleReady } from "./events/ready.js";
 import { handleInteractionCreate } from "./events/interaction-create.js";
 import { guildMemberAdd } from "./events/guild-member-add.js";
+import { env } from "./env.js";
 
-const bot = new Bot({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.DirectMessages,
-    GatewayIntentBits.GuildMembers,
-  ],
-});
+const bot = new Bot(
+  {
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.DirectMessages,
+      GatewayIntentBits.GuildMembers,
+    ],
+  },
+  { url: env.DATABASE_URL },
+);
 
 // Make the commands known to the bot
 // New commands should be registered here

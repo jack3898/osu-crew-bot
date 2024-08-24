@@ -1,0 +1,58 @@
+import {
+  type CommandInteraction,
+  SlashCommandBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+} from "discord.js";
+import type { Command } from "../types.js";
+import { env } from "../env.js";
+import { assertBot } from "../utils/assert.js";
+import { jwt } from "../jwt.js";
+
+export const link: Command = {
+  definition: new SlashCommandBuilder()
+    .setName("link")
+    .setDescription("Authorize this bot to see your Osu! account!"),
+  async execute(interaction: CommandInteraction): Promise<void> {
+    const bot = interaction.client;
+
+    assertBot(bot);
+
+    if (!bot.oauthState.valid(interaction.user.id)) {
+      await interaction.reply("Please wait before trying again.");
+
+      return;
+    }
+
+    const searchParams = new URLSearchParams({
+      client_id: env.OSU_CLIENT_ID.toString(),
+      redirect_uri: env.OSU_REDIRECT_URI,
+      response_type: "code",
+      scope: "public",
+      state: await jwt.sign(
+        { discordUserId: interaction.user.id },
+        { expiresIn: "5m" },
+      ),
+    });
+
+    const osuAuthUrl = `https://osu.ppy.sh/oauth/authorize?${searchParams}`;
+
+    const button = new ButtonBuilder()
+      .setLabel("Link account")
+      .setStyle(ButtonStyle.Link)
+      .setURL(osuAuthUrl);
+
+    const actionRow = new ActionRowBuilder().addComponents(button);
+
+    await interaction.reply({
+      content:
+        "Thank you for giving me the opportunity to learn about your Osu profile! 👀",
+      // @ts-expect-error - This is a valid interaction reply, but discord.js types are complaining.
+      components: [actionRow],
+      ephemeral: true,
+    });
+
+    bot.oauthState.add(interaction.user.id);
+  },
+};

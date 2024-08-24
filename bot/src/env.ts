@@ -5,7 +5,7 @@ export const envSchema = z.object({
   DISCORD_TOKEN: z.string(),
   DISCORD_CLIENT_ID: z.string(),
   OPTIONAL_DISCORD_GUILD_ID: z.string().optional(),
-  OSU_CLIENT_ID: z.string(),
+  OSU_CLIENT_ID: z.number({ coerce: true }),
   OSU_CLIENT_SECRET: z.string(),
   OSU_REDIRECT_URI: z.string(),
   JWT_SECRET: z.string(),

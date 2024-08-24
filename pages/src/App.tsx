@@ -19,8 +19,8 @@ function App(): ReactElement {
       </ol>
       <p>
         <em>
-          Once you have used the code, the bot forgets who you are. So you may
-          remove the app from your Osu! account if you like.
+          You may at any time revoke this application's access to read your
+          profile on your Osu! account settings page.
         </em>
       </p>
       <h2>Why do you have to do this?</h2>

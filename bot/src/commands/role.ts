@@ -1,58 +1,70 @@
-import {
-  type CommandInteraction,
-  SlashCommandBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-} from "discord.js";
+import { GuildMember, SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
-import { env } from "../env.js";
 import { assertBot } from "../utils/assert.js";
-import { jwt } from "../jwt.js";
+import { getOsuApiClient } from "../services/user-service.js";
+import { RoleCalculator } from "../utils/role-calculator.js";
+import { env } from "../env.js";
 
-export const updateRole: Command = {
+const roleCalculator = new RoleCalculator(
+  env.DISCORD_OSU_RANK_ROLE_MAPPINGS_URL,
+);
+
+export const role: Command = {
   definition: new SlashCommandBuilder()
     .setName("role")
-    .setDescription("Fetch your role by allowing this bot to read your rank."),
-  async execute(interaction: CommandInteraction): Promise<void> {
+    .setDescription("Fetch your Osu! rank and get your role!"),
+  async execute(interaction): Promise<void> {
     const bot = interaction.client;
 
     assertBot(bot);
 
-    if (!bot.oauthState.valid(interaction.user.id)) {
-      await interaction.reply("Please wait before trying again.");
+    const osuClient = await getOsuApiClient(
+      undefined,
+      interaction.user.id,
+      bot.db,
+    );
+
+    if (!osuClient) {
+      await interaction.reply(
+        "I do not know who you are yet. Please link your account first with `/link`!",
+      );
 
       return;
     }
 
-    const searchParams = new URLSearchParams({
-      client_id: env.OSU_CLIENT_ID,
-      redirect_uri: env.OSU_REDIRECT_URI,
-      response_type: "code",
-      scope: "public",
-      state: await jwt.sign(
-        { discordUserId: interaction.user.id },
-        { expiresIn: "5m" },
-      ),
-    });
+    const user = await osuClient?.users.getSelf();
+    const rank = user?.rank_history.data.at(-1);
 
-    const osuAuthUrl = `https://osu.ppy.sh/oauth/authorize?${searchParams}`;
+    if (!rank) {
+      await interaction.reply("There was an error fetching your rank.");
 
-    const button = new ButtonBuilder()
-      .setLabel("Link account")
-      .setStyle(ButtonStyle.Link)
-      .setURL(osuAuthUrl);
+      return;
+    }
 
-    const actionRow = new ActionRowBuilder().addComponents(button);
+    const roleId = await roleCalculator.getDiscordRoleWithOsuRank(rank);
 
-    await interaction.reply({
-      content:
-        "Click the button authorize this bot to read your rank. The bot will not have access to your password.",
-      // @ts-expect-error - This is a valid interaction reply, but discord.js types are complaining.
-      components: [actionRow],
-      ephemeral: true,
-    });
+    if (!roleId) {
+      await interaction.reply("There was an error calculating your next role.");
 
-    bot.oauthState.add(interaction.user.id);
+      return;
+    }
+
+    // Check the client can manage roles
+    if (!interaction.guild) {
+      return;
+    }
+
+    const member = interaction.member;
+
+    if (
+      interaction.guild.members.me?.permissions.has("ManageRoles") &&
+      member instanceof GuildMember
+    ) {
+      await member.roles.add(roleId);
+    }
+
+    await interaction.reply(
+      `Congratulations! I think you are deserving of <@&${roleId}>!`,
+    );
   },
 };

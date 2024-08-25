@@ -8,6 +8,9 @@ import { guildMemberAdd } from "./events/guild-member-add.js";
 import { env } from "./env.js";
 import { me } from "./commands/me.js";
 import { role } from "./commands/role.js";
+import { addRankRole } from "./commands/add-rank-role.js";
+import { deleteRankRole } from "./commands/delete-rank-role.js";
+import { listRankRole } from "./commands/list-rank-role.js";
 
 const bot = new Bot(
   {
@@ -26,6 +29,9 @@ bot.registerSlashCommand(link);
 bot.registerSlashCommand(code);
 bot.registerSlashCommand(me);
 bot.registerSlashCommand(role);
+bot.registerSlashCommand(addRankRole);
+bot.registerSlashCommand(deleteRankRole);
+bot.registerSlashCommand(listRankRole);
 
 // Tell the bot what to do when certain events occur
 // New event handlers should be registered here

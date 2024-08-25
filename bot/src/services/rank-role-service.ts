@@ -50,3 +50,5 @@ export function listRankRole(db: LibSQLDatabase, serverId: string, limit = 20) {
 }
 
 // TODO: Get role by rank utility
+// TODO: Auto-prune db records when users delete roles on their server/guild by listening for events
+// TODO: Auto-prune db when role no longer exists on discord

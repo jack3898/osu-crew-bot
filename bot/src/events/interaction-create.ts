@@ -1,5 +1,6 @@
 import type { CacheType, Interaction } from "discord.js";
 import { assertBot } from "../utils/assert.js";
+import { env } from "../env.js";
 
 export async function handleInteractionCreate(
   interaction: Interaction<CacheType>,
@@ -21,7 +22,10 @@ export async function handleInteractionCreate(
 
     const bot = interaction.client;
 
-    if (bot.recentEngagements.get(interaction.user.id)) {
+    if (
+      bot.recentEngagements.get(interaction.user.id) &&
+      env.NODE_ENV !== "development"
+    ) {
       await interaction.reply("You're going too fast!");
 
       bot.recentEngagements.set(interaction.user.id, true);

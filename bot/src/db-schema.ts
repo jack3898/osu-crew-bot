@@ -2,12 +2,12 @@ import { sql } from "drizzle-orm";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
 const created_at = integer("created_at", { mode: "timestamp_ms" })
-  .default(sql`(CURRENT_TIMESTAMP)`)
+  .default(sql`(current_timestamp)`)
   .notNull();
 
 const updated_at = integer("updated_at", { mode: "timestamp_ms" })
-  .default(sql`(CURRENT_TIMESTAMP)`)
-  .$onUpdate(() => sql`(CURRENT_TIMESTAMP)`);
+  .default(sql`(current_timestamp)`)
+  .$onUpdateFn(() => new Date());
 
 const id = integer("id").primaryKey({ autoIncrement: true }).notNull();
 

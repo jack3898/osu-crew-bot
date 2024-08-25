@@ -49,6 +49,19 @@ export function listRankRole(db: LibSQLDatabase, serverId: string, limit = 20) {
     .limit(limit);
 }
 
-// TODO: Get role by rank utility
+export async function getRankRoles(
+  db: LibSQLDatabase,
+  serverId: string,
+  osuRank: number,
+) {
+  const roleMappings = await listRankRole(db, serverId);
+
+  const bestRole = roleMappings.filter((role) => {
+    return osuRank >= role.min_requirement && osuRank <= role.max_requirement;
+  });
+
+  return bestRole;
+}
+
 // TODO: Auto-prune db records when users delete roles on their server/guild by listening for events
 // TODO: Auto-prune db when role no longer exists on discord

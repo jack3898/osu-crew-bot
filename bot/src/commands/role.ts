@@ -2,12 +2,14 @@ import { GuildMember, SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { getOsuApiClient } from "../services/user-service.js";
-import { RoleCalculator } from "../utils/role-calculator.js";
-import { env } from "../env.js";
+import { getRankRoles } from "../services/rank-role-service.js";
+import { template } from "../utils/template.js";
 
-const roleCalculator = new RoleCalculator(
-  env.DISCORD_OSU_RANK_ROLE_MAPPINGS_URL,
-);
+const message = template`Congratulations! I think you are deserving of the following roles:
+
+${"rolelist"}
+
+Enjoy!`;
 
 export const role: Command = {
   definition: new SlashCommandBuilder()
@@ -33,16 +35,14 @@ export const role: Command = {
     const user = await osuClient?.users.getSelf();
     const rank = user?.rank_history.data.at(-1);
 
-    if (!rank) {
+    if (!rank || !interaction.guildId) {
       return interaction.reply("There was an error fetching your rank.");
     }
 
-    const roleId = await roleCalculator.getDiscordRoleWithOsuRank(rank);
+    const dbRoles = await getRankRoles(bot.db, interaction.guildId, rank);
 
-    if (!roleId) {
-      return interaction.reply(
-        "There was an error calculating your next role.",
-      );
+    if (!dbRoles.length) {
+      return interaction.reply("I couldn't find the best role for you. 😢");
     }
 
     // Check the client can manage roles
@@ -56,11 +56,15 @@ export const role: Command = {
       interaction.guild.members.me?.permissions.has("ManageRoles") &&
       member instanceof GuildMember
     ) {
-      await member.roles.add(roleId);
+      await Promise.all(
+        dbRoles.map((dbRole) => member.roles.add(dbRole.role_id)),
+      );
     }
 
     return interaction.reply(
-      `Congratulations! I think you are deserving of <@&${roleId}>!`,
+      message({
+        rolelist: dbRoles.map((dbRole) => `- <@&${dbRole.role_id}>`).join("\n"),
+      }),
     );
   },
 };

@@ -43,6 +43,16 @@ export const addRankRole: Command = {
     const minRank = interaction.options.getInteger("min-rank", true);
     const maxRank = interaction.options.getInteger("max-rank", true);
 
+    if (minRank <= 0 || maxRank <= 0) {
+      return interaction.reply("The rank requirements must be greater than 0.");
+    }
+
+    if (minRank >= maxRank) {
+      return interaction.reply(
+        "The maximum rank requirement must be greater than the minimum.",
+      );
+    }
+
     const [result] = await addRankRoleDb(bot.db, {
       roleId: role.id,
       minRequirement: minRank,

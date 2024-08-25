@@ -5,7 +5,7 @@ import { getOsuApiClient } from "../services/user-service.js";
 
 export const me: Command = {
   definition: new SlashCommandBuilder().setName("me").setDescription("You!"),
-  async execute(interaction): Promise<void> {
+  async execute(interaction) {
     const bot = interaction.client;
 
     assertBot(bot);
@@ -19,9 +19,7 @@ export const me: Command = {
     const user = await osuClient?.users.getSelf();
 
     if (!user) {
-      await interaction.reply("I do not know who you are. :(");
-
-      return;
+      return interaction.reply("I do not know who you are. :(");
     }
 
     interaction.reply(

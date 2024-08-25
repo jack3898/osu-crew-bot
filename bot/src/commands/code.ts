@@ -1,4 +1,4 @@
-import { type CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { jwt } from "../jwt.js";
@@ -19,7 +19,7 @@ export const code: Command = {
         .setDescription("The code you received from the OAuth2 flow.")
         .setRequired(true),
     ),
-  async execute(interaction: CommandInteraction): Promise<void> {
+  async execute(interaction) {
     const user = interaction.member?.user;
 
     if (!user) {

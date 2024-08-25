@@ -13,7 +13,7 @@ export const role: Command = {
   definition: new SlashCommandBuilder()
     .setName("role")
     .setDescription("Fetch your Osu! rank and get your role!"),
-  async execute(interaction): Promise<void> {
+  async execute(interaction) {
     const bot = interaction.client;
 
     assertBot(bot);
@@ -25,28 +25,24 @@ export const role: Command = {
     );
 
     if (!osuClient) {
-      await interaction.reply(
+      return interaction.reply(
         "I do not know who you are yet. Please link your account first with `/link`!",
       );
-
-      return;
     }
 
     const user = await osuClient?.users.getSelf();
     const rank = user?.rank_history.data.at(-1);
 
     if (!rank) {
-      await interaction.reply("There was an error fetching your rank.");
-
-      return;
+      return interaction.reply("There was an error fetching your rank.");
     }
 
     const roleId = await roleCalculator.getDiscordRoleWithOsuRank(rank);
 
     if (!roleId) {
-      await interaction.reply("There was an error calculating your next role.");
-
-      return;
+      return interaction.reply(
+        "There was an error calculating your next role.",
+      );
     }
 
     // Check the client can manage roles
@@ -63,7 +59,7 @@ export const role: Command = {
       await member.roles.add(roleId);
     }
 
-    await interaction.reply(
+    return interaction.reply(
       `Congratulations! I think you are deserving of <@&${roleId}>!`,
     );
   },

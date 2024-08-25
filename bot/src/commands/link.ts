@@ -14,15 +14,13 @@ export const link: Command = {
   definition: new SlashCommandBuilder()
     .setName("link")
     .setDescription("Authorize this bot to see your Osu! account!"),
-  async execute(interaction: CommandInteraction): Promise<void> {
+  async execute(interaction: CommandInteraction) {
     const bot = interaction.client;
 
     assertBot(bot);
 
     if (!bot.oauthState.valid(interaction.user.id)) {
-      await interaction.reply("Please wait before trying again.");
-
-      return;
+      return interaction.reply("Please wait before trying again.");
     }
 
     const searchParams = new URLSearchParams({

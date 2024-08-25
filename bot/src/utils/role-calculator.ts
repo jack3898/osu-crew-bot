@@ -1,6 +1,8 @@
 import TTLCache from "@isaacs/ttlcache";
 import { z } from "zod";
 
+// TODO: delete this file entirely and instead add a function to get the right role in rank-role-service.ts
+
 export type RoleMap = {
   roleId: string;
   rankRange: [number, number];

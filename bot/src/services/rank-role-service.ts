@@ -65,8 +65,13 @@ export function deleteRankRole(
         eq(roleRankMapTable.id, id),
         eq(roleRankMapTable.server_id, serverId),
       ),
-    )
-    .returning();
+    );
+}
+
+export function deleteAllRankRoles(db: LibSQLDatabase, serverId: string) {
+  return db
+    .delete(roleRankMapTable)
+    .where(eq(roleRankMapTable.server_id, serverId));
 }
 
 export function listRankRole(db: LibSQLDatabase, serverId: string, limit = 20) {

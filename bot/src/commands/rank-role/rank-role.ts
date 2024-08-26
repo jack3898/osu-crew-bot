@@ -5,6 +5,7 @@ import { listRankRole } from "./rank-role-list.js";
 import { deleteRankRole } from "./rank-role-delete.js";
 import { updateRankRole } from "./rank-role-update.js";
 import { hide } from "../../utils/message.js";
+import { clearRankRole } from "./rank-role-clear.js";
 
 export const rankRole: Command = {
   definition: new SlashCommandBuilder()
@@ -87,6 +88,13 @@ export const rankRole: Command = {
             .setRequired(true),
         ),
     )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("clear")
+        .setDescription(
+          "Delete all rank role mappings! WARNING: DESTRUCTIVE 🚨",
+        ),
+    )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
   async execute(interaction) {
     if (!interaction.isChatInputCommand()) {
@@ -108,6 +116,8 @@ export const rankRole: Command = {
         return updateRankRole(interaction);
       case "delete":
         return deleteRankRole(interaction);
+      case "clear":
+        return clearRankRole(interaction);
       default:
         return interaction.reply(
           hide("Unknown subcommand received. This is a bug! 😨"),

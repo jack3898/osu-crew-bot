@@ -9,6 +9,7 @@ import type { Command } from "../types.js";
 import { env } from "../env.js";
 import { assertBot } from "../utils/assert.js";
 import { jwt } from "../jwt.js";
+import { hide } from "../utils/message.js";
 
 export const link: Command = {
   definition: new SlashCommandBuilder()
@@ -20,7 +21,7 @@ export const link: Command = {
     assertBot(bot);
 
     if (!bot.oauthState.valid(interaction.user.id)) {
-      return interaction.reply("Please wait before trying again.");
+      return interaction.reply(hide("Please wait before trying again."));
     }
 
     const searchParams = new URLSearchParams({
@@ -44,11 +45,11 @@ export const link: Command = {
     const actionRow = new ActionRowBuilder().addComponents(button);
 
     await interaction.reply({
-      content:
+      ...hide(
         "Thank you for giving me the opportunity to learn about your Osu profile! 👀",
+      ),
       // @ts-expect-error - This is a valid interaction reply, but discord.js types are complaining.
       components: [actionRow],
-      ephemeral: true,
     });
 
     bot.oauthState.add(interaction.user.id);

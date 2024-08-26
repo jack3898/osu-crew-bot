@@ -4,8 +4,9 @@ import { assertBot } from "../utils/assert.js";
 import { getOsuApiClient } from "../services/user-service.js";
 import { getRankRoles } from "../services/rank-role-service.js";
 import { template } from "../utils/template.js";
+import { hide } from "../utils/message.js";
 
-const message = template`Congratulations! I think you are deserving of the following roles:
+const success = template`Congratulations! I think you are deserving of the following roles:
 
 ${"rolelist"}
 
@@ -28,7 +29,9 @@ export const role: Command = {
 
     if (!osuClient) {
       return interaction.reply(
-        "I do not know who you are yet. Please link your account first with `/link`!",
+        hide(
+          "I do not know who you are yet. Please link your account first with `/link`!",
+        ),
       );
     }
 
@@ -36,13 +39,15 @@ export const role: Command = {
     const rank = user?.rank_history.data.at(-1);
 
     if (!rank || !interaction.guildId) {
-      return interaction.reply("There was an error fetching your rank.");
+      return interaction.reply(hide("There was an error fetching your rank."));
     }
 
     const dbRoles = await getRankRoles(bot.db, interaction.guildId, rank);
 
     if (!dbRoles.length) {
-      return interaction.reply("I couldn't find the best role for you. 😢");
+      return interaction.reply(
+        hide("I couldn't find the best role for you. 😢"),
+      );
     }
 
     // Check the client can manage roles
@@ -62,9 +67,13 @@ export const role: Command = {
     }
 
     return interaction.reply(
-      message({
-        rolelist: dbRoles.map((dbRole) => `- <@&${dbRole.role_id}>`).join("\n"),
-      }),
+      hide(
+        success({
+          rolelist: dbRoles
+            .map((dbRole) => `- <@&${dbRole.role_id}>`)
+            .join("\n"),
+        }),
+      ),
     );
   },
 };

@@ -7,6 +7,7 @@ import {
   exchangeOsuOAuth2CodeAndSaveToDb,
   getOsuApiClient,
 } from "../services/user-service.js";
+import { hide } from "../utils/message.js";
 
 export const code: Command = {
   definition: new SlashCommandBuilder()
@@ -32,15 +33,11 @@ export const code: Command = {
 
     // This helps prevent the code from being exchanged by users who haven't started the OAuth2 flow
     if (!bot.oauthState.exists(interaction.user.id)) {
-      await interaction.reply("Please use the `/link` command first!");
-
-      return;
+      return interaction.reply(hide("Please use the `/link` command first!"));
     }
 
     if (!bot.oauthState.valid(interaction.user.id)) {
-      await interaction.reply("Please wait before trying again.");
-
-      return;
+      return interaction.reply(hide("Please wait before trying again."));
     }
 
     bot.oauthState.use(interaction.user.id);
@@ -54,9 +51,7 @@ export const code: Command = {
     const { code, state } = decodeCode(userProvidedCode.value);
 
     if (!code || !state) {
-      await interaction.reply("The provided code is invalid.");
-
-      return;
+      return interaction.reply(hide("The provided code is invalid."));
     }
 
     // This JWT cannot be tampered with, as it is signed with a secret only the bot knows
@@ -64,11 +59,11 @@ export const code: Command = {
     const verifiedState = await jwt.verify(state);
 
     if (verifiedState.discordUserId !== interaction.user.id) {
-      await interaction.reply(
-        "This code is not for you. Please use the `/link` command for your own account.",
+      return interaction.reply(
+        hide(
+          "This code is not for you. Please use the `/link` command for your own account.",
+        ),
       );
-
-      return;
     }
 
     const result = await exchangeOsuOAuth2CodeAndSaveToDb(
@@ -78,11 +73,9 @@ export const code: Command = {
     );
 
     if (!result) {
-      await interaction.reply(
-        "There was an error exchanging the code for an access token.",
+      return interaction.reply(
+        hide("There was an error exchanging the code for an access token."),
       );
-
-      return;
     }
 
     const osuClient = await getOsuApiClient(result.access_token);
@@ -90,11 +83,9 @@ export const code: Command = {
     const username = osuUser.username;
 
     if (!username) {
-      await interaction.reply("There was an error fetching your rank.");
-
-      return;
+      return interaction.reply(hide("There was an error fetching your rank."));
     }
 
-    await interaction.reply(`Hey, ${username}! 🥳 All done!`);
+    await interaction.reply(hide(`Hey, ${username}! 🥳 All done!`));
   },
 };

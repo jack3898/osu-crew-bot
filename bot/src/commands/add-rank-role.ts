@@ -2,6 +2,7 @@ import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { addRankRole as addRankRoleDb } from "../services/rank-role-service.js";
+import { hide } from "../utils/message.js";
 
 export const addRankRole: Command = {
   definition: new SlashCommandBuilder()
@@ -44,12 +45,14 @@ export const addRankRole: Command = {
     const maxRank = interaction.options.getInteger("max-rank", true);
 
     if (minRank <= 0 || maxRank <= 0) {
-      return interaction.reply("The rank requirements must be greater than 0.");
+      return interaction.reply(
+        hide("The rank requirements must be greater than 0."),
+      );
     }
 
     if (minRank >= maxRank) {
       return interaction.reply(
-        "The maximum rank requirement must be greater than the minimum.",
+        hide("The maximum rank requirement must be greater than the minimum."),
       );
     }
 
@@ -62,7 +65,9 @@ export const addRankRole: Command = {
     });
 
     return interaction.reply(
-      `I have saved the role mapping for <@&${role.id}> under id \`${result?.id}\`! 🙌`,
+      hide(
+        `I have saved the role mapping for <@&${role.id}> under id \`${result?.id}\`! 🙌`,
+      ),
     );
   },
 };

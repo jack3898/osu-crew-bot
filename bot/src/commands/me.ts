@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { getOsuApiClient } from "../services/user-service.js";
+import { hide } from "../utils/message.js";
 
 export const me: Command = {
   definition: new SlashCommandBuilder().setName("me").setDescription("You!"),
@@ -19,11 +20,13 @@ export const me: Command = {
     const user = await osuClient?.users.getSelf();
 
     if (!user) {
-      return interaction.reply("I do not know who you are. :(");
+      return interaction.reply(hide("I do not know who you are. :("));
     }
 
     interaction.reply(
-      `Hey, ${user.username}! I see you're rank ${user.rank_history.data.at(-1)}, not too shabby.`,
+      hide(
+        `Hey, ${user.username}! I see you're rank ${user.rank_history.data.at(-1)}, not too shabby.`,
+      ),
     );
   },
 };

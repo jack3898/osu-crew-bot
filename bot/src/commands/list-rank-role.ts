@@ -3,6 +3,7 @@ import type { Command } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { listRankRole as listRankRoleDb } from "../services/rank-role-service.js";
 import { template } from "../utils/template.js";
+import { hide } from "../utils/message.js";
 
 const message = template`There are ${"amount"} role mappings.
 _Only a max of 20 are shown._
@@ -29,24 +30,26 @@ export const listRankRole: Command = {
 
     if (!rankRoles.length) {
       return interaction.reply(
-        "There are no role mappings! Use `/add-rank-role` to create one.",
+        hide("There are no role mappings! Use `/add-rank-role` to create one."),
       );
     }
 
     return interaction.reply(
-      message({
-        amount: rankRoles.length,
-        listItems: rankRoles
-          .map((rankRole) =>
-            listItem({
-              id: rankRole.id,
-              min: rankRole.min_requirement,
-              max: rankRole.max_requirement,
-              roleid: rankRole.role_id,
-            }),
-          )
-          .join("\n"),
-      }),
+      hide(
+        message({
+          amount: rankRoles.length,
+          listItems: rankRoles
+            .map((rankRole) =>
+              listItem({
+                id: rankRole.id,
+                min: rankRole.min_requirement,
+                max: rankRole.max_requirement,
+                roleid: rankRole.role_id,
+              }),
+            )
+            .join("\n"),
+        }),
+      ),
     );
   },
 };

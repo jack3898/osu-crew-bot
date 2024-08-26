@@ -3,6 +3,7 @@ import type { Command } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { deleteRankRole as deleteRankRoleDb } from "../services/rank-role-service.js";
 import { template } from "../utils/template.js";
+import { hide } from "../utils/message.js";
 
 const success = template`Successfully deleted <@&${"roleid"}> given between rank ${"min"} to ${"max"}.`;
 
@@ -34,16 +35,20 @@ export const deleteRankRole: Command = {
 
     if (!result) {
       return interaction.reply(
-        "I could not find that role mapping to delete. Does it belong in this server?",
+        hide(
+          "I could not find that role mapping to delete. Does it belong in this server?",
+        ),
       );
     }
 
     return interaction.reply(
-      success({
-        roleid: result.role_id,
-        min: result.min_requirement,
-        max: result.max_requirement,
-      }),
+      hide(
+        success({
+          roleid: result.role_id,
+          min: result.min_requirement,
+          max: result.max_requirement,
+        }),
+      ),
     );
   },
 };

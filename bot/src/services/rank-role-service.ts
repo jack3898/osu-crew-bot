@@ -25,6 +25,34 @@ export function addRankRole(
     .returning();
 }
 
+export function updateRankRole(
+  db: LibSQLDatabase,
+  id: number,
+  serverId: string,
+  data: {
+    roleId?: string | null;
+    minRequirement?: number | null;
+    maxRequirement?: number | null;
+    permanent?: boolean | null;
+  },
+) {
+  return db
+    .update(roleRankMapTable)
+    .set({
+      ...(data.minRequirement ? { min_requirement: data.minRequirement } : {}),
+      ...(data.maxRequirement ? { max_requirement: data.maxRequirement } : {}),
+      ...(data.permanent ? { permanent: data.permanent } : {}),
+      ...(data.roleId ? { role_id: data.roleId } : {}),
+    })
+    .where(
+      and(
+        eq(roleRankMapTable.id, id),
+        eq(roleRankMapTable.server_id, serverId),
+      ),
+    )
+    .returning();
+}
+
 export function deleteRankRole(
   db: LibSQLDatabase,
   id: number,

@@ -20,7 +20,11 @@ export const me: Command = {
     const user = await osuClient?.users.getSelf();
 
     if (!user) {
-      return interaction.reply(hide("I do not know who you are. :("));
+      return interaction.reply(
+        hide(
+          "I do not know who you are yet. 🥲 Use `/link` to link your Osu! account!",
+        ),
+      );
     }
 
     interaction.reply(

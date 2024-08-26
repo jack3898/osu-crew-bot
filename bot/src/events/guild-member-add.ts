@@ -14,7 +14,7 @@ See you around! 👋
 _I will not send any further DM's unless it is required._
 `;
 
-export async function guildMemberAdd(member: GuildMember): Promise<void> {
+export async function handleGuildMemberAdd(member: GuildMember): Promise<void> {
   try {
     await member.send(message({ username: member.user.username }));
   } catch (error) {

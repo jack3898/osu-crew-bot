@@ -3,6 +3,7 @@ import type {
   CommandInteraction,
   SlashCommandBuilder,
   SlashCommandSubcommandsOnlyBuilder,
+  ButtonInteraction,
 } from "discord.js";
 
 export type Command = {
@@ -11,4 +12,11 @@ export type Command = {
     | SlashCommandOptionsOnlyBuilder
     | SlashCommandSubcommandsOnlyBuilder;
   execute(interaction: CommandInteraction): Promise<unknown>;
+};
+
+export type ButtonInteractionId = "rank-role-clear-yes" | "rank-role-clear-no";
+
+export type Button = {
+  id: ButtonInteractionId;
+  execute(interaction: ButtonInteraction): Promise<unknown>;
 };

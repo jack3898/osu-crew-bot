@@ -1,5 +1,5 @@
 import { env } from "./env.js";
-import type { Command } from "./types.js";
+import type { Button, Command } from "./types.js";
 import {
   Client,
   REST,
@@ -19,6 +19,7 @@ export class Bot extends Client {
   }
 
   readonly commands = new Collection<PropertyKey, Command>();
+  readonly buttons = new Collection<string, Button>();
   readonly rest = new REST();
   readonly oauthState = new OAuthTTL<string>({ ttl: 1000 * 60 * 1 });
   readonly recentEngagements = new TTLCache<string, boolean>({ ttl: 5_000 });
@@ -27,8 +28,12 @@ export class Bot extends Client {
   /**
    * Registers a local slash command to later be published to Discord's API.
    */
-  async registerSlashCommand(command: Command): Promise<void> {
+  registerSlashCommand(command: Command): void {
     this.commands.set(command.definition.name, command);
+  }
+
+  registerButton(modal: Button): void {
+    this.buttons.set(modal.id, modal);
   }
 
   /**

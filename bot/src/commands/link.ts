@@ -42,13 +42,14 @@ export const link: Command = {
       .setStyle(ButtonStyle.Link)
       .setURL(osuAuthUrl);
 
-    const actionRow = new ActionRowBuilder().addComponents(button);
+    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      button,
+    );
 
     await interaction.reply({
       ...hide(
         "Thank you for giving me the opportunity to learn about your Osu profile! 👀",
       ),
-      // @ts-expect-error - This is a valid interaction reply, but discord.js types are complaining.
       components: [actionRow],
     });
 

@@ -1,10 +1,45 @@
-import type { ChatInputCommandInteraction } from "discord.js";
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  type ChatInputCommandInteraction,
+} from "discord.js";
 import { assertBot } from "../../utils/assert.js";
-import { deleteAllRankRoles } from "../../services/rank-role-service.js";
-import { template } from "../../utils/template.js";
 import { hide } from "../../utils/message.js";
+import type { ButtonInteractionId } from "../../types.js";
+import { setTimeout as sleep } from "timers/promises";
 
-const deleteSuccess = template`Successfully deleted \`${"count"}\` records, your role mappings are now cleared.`;
+const yesButton = new ButtonBuilder()
+  .setCustomId("rank-role-clear-yes" satisfies ButtonInteractionId)
+  .setLabel("Yes")
+  .setStyle(ButtonStyle.Success);
+
+const noButton = new ButtonBuilder()
+  .setCustomId("rank-role-clear-no" satisfies ButtonInteractionId)
+  .setLabel("No")
+  .setStyle(ButtonStyle.Danger);
+
+const yesButtonDisabled = new ButtonBuilder()
+  .setCustomId("rank-role-clear-yes" satisfies ButtonInteractionId)
+  .setLabel("Yes")
+  .setStyle(ButtonStyle.Success)
+  .setDisabled(true);
+
+const noButtonDisabled = new ButtonBuilder()
+  .setCustomId("rank-role-clear-no" satisfies ButtonInteractionId)
+  .setLabel("No")
+  .setStyle(ButtonStyle.Danger)
+  .setDisabled(true);
+
+const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+  yesButton,
+  noButton,
+);
+
+const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+  yesButtonDisabled,
+  noButtonDisabled,
+);
 
 export async function clearRankRole(
   interaction: ChatInputCommandInteraction,
@@ -17,13 +52,15 @@ export async function clearRankRole(
     return;
   }
 
-  const result = await deleteAllRankRoles(bot.db, interaction.guildId);
+  await interaction.reply({
+    ...hide(
+      "Are you sure you want to clear ALL rank to role mappings? This is a destructive operation, and there's no going back!",
+    ),
+    components: [row],
+  });
 
-  if (!result.rowsAffected) {
-    return interaction.reply(
-      hide("No role mappings were deleted. Do you have any?"),
-    );
-  }
+  await sleep(60_000);
 
-  return interaction.reply(hide(deleteSuccess({ count: result.rowsAffected })));
+  // Disable the button, discord button events expire after 15 mins, but 60 seconds is enough time
+  return interaction.editReply({ components: [disabledRow] });
 }

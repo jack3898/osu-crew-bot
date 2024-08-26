@@ -3,14 +3,14 @@ import type { Command } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { listRankRole as listRankRoleDb } from "../services/rank-role-service.js";
 import { template } from "../utils/template.js";
-import { hide } from "../utils/message.js";
+import { hide, prettyRole } from "../utils/message.js";
 
 const message = template`There are ${"amount"} role mappings.
 _Only a max of 20 are shown._
 
 ${"listItems"}`;
 
-const listItem = template`- <@&${"roleid"}>: rank \`${"min"}\` to \`${"max"}\`, id \`${"id"}\``;
+const listItem = template`- ${"role"}: rank \`${"min"}\` to \`${"max"}\`, id \`${"id"}\``;
 
 export const listRankRole: Command = {
   definition: new SlashCommandBuilder()
@@ -44,7 +44,7 @@ export const listRankRole: Command = {
                 id: rankRole.id,
                 min: rankRole.min_requirement,
                 max: rankRole.max_requirement,
-                roleid: rankRole.role_id,
+                role: prettyRole(rankRole.role_id),
               }),
             )
             .join("\n"),

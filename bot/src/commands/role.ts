@@ -4,7 +4,7 @@ import { assertBot } from "../utils/assert.js";
 import { getOsuApiClient } from "../services/user-service.js";
 import { getRankRoles } from "../services/rank-role-service.js";
 import { template } from "../utils/template.js";
-import { hide } from "../utils/message.js";
+import { hide, prettyRole } from "../utils/message.js";
 
 const success = template`Congratulations! I think you are deserving of the following roles:
 
@@ -70,7 +70,7 @@ export const role: Command = {
       hide(
         success({
           rolelist: dbRoles
-            .map((dbRole) => `- <@&${dbRole.role_id}>`)
+            .map((dbRole) => `- ${prettyRole(dbRole.role_id)}`)
             .join("\n"),
         }),
       ),

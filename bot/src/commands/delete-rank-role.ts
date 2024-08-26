@@ -3,9 +3,9 @@ import type { Command } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { deleteRankRole as deleteRankRoleDb } from "../services/rank-role-service.js";
 import { template } from "../utils/template.js";
-import { hide } from "../utils/message.js";
+import { hide, prettyRole } from "../utils/message.js";
 
-const success = template`Successfully deleted <@&${"roleid"}> given between rank ${"min"} to ${"max"}.`;
+const success = template`Successfully deleted ${"role"} given between rank ${"min"} to ${"max"}.`;
 
 export const deleteRankRole: Command = {
   definition: new SlashCommandBuilder()
@@ -44,7 +44,7 @@ export const deleteRankRole: Command = {
     return interaction.reply(
       hide(
         success({
-          roleid: result.role_id,
+          role: prettyRole(result.role_id),
           min: result.min_requirement,
           max: result.max_requirement,
         }),

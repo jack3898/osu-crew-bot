@@ -66,7 +66,7 @@ export const addRankRole: Command = {
 
     return interaction.reply(
       hide(
-        `I have saved the role mapping for <@&${role.id}> under id \`${result?.id}\`! 🙌`,
+        `I have saved the role mapping for ${role} under id \`${result?.id}\`! 🙌`,
       ),
     );
   },

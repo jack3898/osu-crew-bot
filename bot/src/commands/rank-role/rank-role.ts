@@ -4,6 +4,7 @@ import { addRankRole } from "./rank-role-add.js";
 import { listRankRole } from "./rank-role-list.js";
 import { deleteRankRole } from "./rank-role-delete.js";
 import { updateRankRole } from "./rank-role-update.js";
+import { hide } from "../../utils/message.js";
 
 export const rankRole: Command = {
   definition: new SlashCommandBuilder()
@@ -93,7 +94,9 @@ export const rankRole: Command = {
         "Somehow received a non chat input command interaction type.",
       );
 
-      return interaction.reply("There was a problem processing this command.");
+      return interaction.reply(
+        hide("There was a problem processing this command."),
+      );
     }
 
     switch (interaction.options.getSubcommand()) {
@@ -106,7 +109,9 @@ export const rankRole: Command = {
       case "delete":
         return deleteRankRole(interaction);
       default:
-        return interaction.reply("Unknown subcommand received. This is a bug!");
+        return interaction.reply(
+          hide("Unknown subcommand received. This is a bug! 😨"),
+        );
     }
   },
 };

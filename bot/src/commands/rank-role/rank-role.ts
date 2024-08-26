@@ -51,7 +51,7 @@ export const rankRole: Command = {
           option
             .setName("id")
             .setDescription(
-              "The ID of the mapped role. Use `/list-rank-role` to see ranked roles and their IDs.",
+              "The ID of the mapped role. Use `/rank-role list` to see ranked roles and their IDs.",
             )
             .setRequired(true),
         )

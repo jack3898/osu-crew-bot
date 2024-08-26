@@ -26,7 +26,7 @@ export async function listRankRole(
 
   if (!rankRoles.length) {
     return interaction.reply(
-      hide("There are no role mappings! Use `/add-rank-role` to create one."),
+      hide("There are no role mappings! Use `/rank-role add` to create one."),
     );
   }
 

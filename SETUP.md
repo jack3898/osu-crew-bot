@@ -12,10 +12,9 @@ The static SPA is used for OAuth purposes so users can authorize their Osu! acco
 - You will need Node.js with npm preferably using the latest LTS.
 - A public URL you plan to use to home the static site.
 - An OAuth app created in your Osu! account.
-- A Discord bot application created
+- A Discord bot application created.
   - With the privileged guild members gateway intent enabled.
 - Generate a long and secure JWT secret token (which can be anything), using a cryptographically secure method.
-- You will need a public hosted role mapping file associating Discord roles IDs with Osu! rank ranges. Please see <a href="https://gist.github.com/jack3898/f879491ff2f770c1f786f152420127f5">this</a> for an example.
 - Copy and rename example.env to .env, and fill in the required fields using the various credentials you have just created.
 - Create a `DATABASE_URL` in your **system** environment variables. If it's local use this as a value `file:<path to file here>`.
 

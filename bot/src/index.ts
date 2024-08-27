@@ -8,7 +8,6 @@ import { me } from "./commands/me.js";
 import { role } from "./commands/role.js";
 import { rankRole } from "./commands/rank-role/rank-role.js";
 import { rankRoleClearYes } from "./buttons/rank-role-clear-yes.js";
-import { rankRoleClearNo } from "./buttons/rank-role-clear-no.js";
 import { handleInteractionCreateChatCommand } from "./events/interaction-create-chat-command.js";
 import { handleInteractionCreateButton } from "./events/interaction-create-button.js";
 import { handleGuildMemberAdd } from "./events/guild-member-add.js";
@@ -33,7 +32,6 @@ bot.registerSlashCommand(rankRole);
 
 // Handle button clicks in chat messages
 bot.registerButton(rankRoleClearYes);
-bot.registerButton(rankRoleClearNo);
 
 // Tell the bot what to do when certain events occur
 // New event handlers should be registered here

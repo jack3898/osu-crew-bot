@@ -14,7 +14,7 @@ export type Command = {
   execute(interaction: CommandInteraction): Promise<unknown>;
 };
 
-export type ButtonInteractionId = "rank-role-clear-yes" | "rank-role-clear-no";
+export type ButtonInteractionId = "rank-role-clear-yes";
 
 export type Button = {
   id: ButtonInteractionId;

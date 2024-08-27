@@ -11,34 +11,19 @@ import { setTimeout as sleep } from "timers/promises";
 
 const yesButton = new ButtonBuilder()
   .setCustomId("rank-role-clear-yes" satisfies ButtonInteractionId)
-  .setLabel("Yes")
-  .setStyle(ButtonStyle.Success);
-
-const noButton = new ButtonBuilder()
-  .setCustomId("rank-role-clear-no" satisfies ButtonInteractionId)
-  .setLabel("No")
+  .setLabel("Delete all")
   .setStyle(ButtonStyle.Danger);
 
 const yesButtonDisabled = new ButtonBuilder()
   .setCustomId("rank-role-clear-yes" satisfies ButtonInteractionId)
-  .setLabel("Yes")
-  .setStyle(ButtonStyle.Success)
-  .setDisabled(true);
-
-const noButtonDisabled = new ButtonBuilder()
-  .setCustomId("rank-role-clear-no" satisfies ButtonInteractionId)
-  .setLabel("No")
+  .setLabel("Expired")
   .setStyle(ButtonStyle.Danger)
   .setDisabled(true);
 
-const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-  yesButton,
-  noButton,
-);
+const row = new ActionRowBuilder<ButtonBuilder>().addComponents(yesButton);
 
 const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
   yesButtonDisabled,
-  noButtonDisabled,
 );
 
 export async function clearRankRole(

@@ -82,6 +82,16 @@ export function listRankRole(db: LibSQLDatabase, serverId: string, limit = 20) {
     .limit(limit);
 }
 
+export async function getRankRoleById(db: LibSQLDatabase, id: number) {
+  const [record] = await db
+    .select()
+    .from(roleRankMapTable)
+    .where(eq(roleRankMapTable.id, id))
+    .limit(1);
+
+  return record;
+}
+
 export async function getRankRoles(
   db: LibSQLDatabase,
   serverId: string,

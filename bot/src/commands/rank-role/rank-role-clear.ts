@@ -6,16 +6,16 @@ import {
 } from "discord.js";
 import { assertBot } from "../../utils/assert.js";
 import { hide } from "../../utils/message.js";
-import type { ButtonInteractionId } from "../../types.js";
+import { ButtonId } from "../../types.js";
 import { setTimeout as sleep } from "timers/promises";
 
 const yesButton = new ButtonBuilder()
-  .setCustomId("rank-role-clear-yes" satisfies ButtonInteractionId)
+  .setCustomId(ButtonId.RankRoleClearConfirm)
   .setLabel("Delete all")
   .setStyle(ButtonStyle.Danger);
 
 const yesButtonDisabled = new ButtonBuilder()
-  .setCustomId("rank-role-clear-yes" satisfies ButtonInteractionId)
+  .setCustomId(ButtonId.Disabled)
   .setLabel("Expired")
   .setStyle(ButtonStyle.Danger)
   .setDisabled(true);

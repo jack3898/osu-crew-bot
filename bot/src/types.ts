@@ -14,9 +14,12 @@ export type Command = {
   execute(interaction: CommandInteraction): Promise<unknown>;
 };
 
-export type ButtonInteractionId = "rank-role-clear-yes";
-
-export type Button = {
-  id: ButtonInteractionId;
+export type ButtonHandler = {
+  id: ButtonId;
   execute(interaction: ButtonInteraction): Promise<unknown>;
 };
+
+export const enum ButtonId {
+  Disabled = "a",
+  RankRoleClearConfirm = "b",
+}

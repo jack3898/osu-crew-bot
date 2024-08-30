@@ -7,7 +7,7 @@ import { env } from "./env.js";
 import { me } from "./commands/me.js";
 import { role } from "./commands/role.js";
 import { rankRole } from "./commands/rank-role/rank-role.js";
-import { rankRoleClearYes } from "./buttons/rank-role-clear-yes.js";
+import { rankRoleClearYes } from "./button-handlers/rank-role-clear-yes.js";
 import { handleInteractionCreateChatCommand } from "./events/interaction-create-chat-command.js";
 import { handleInteractionCreateButton } from "./events/interaction-create-button.js";
 import { handleGuildMemberAdd } from "./events/guild-member-add.js";

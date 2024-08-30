@@ -1,13 +1,13 @@
 import { deleteAllRankRoles } from "../services/rank-role-service.js";
-import type { Button } from "../types.js";
+import { ButtonId, type ButtonHandler } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { hide } from "../utils/message.js";
 import { template } from "../utils/template.js";
 
 const deleteSuccess = template`Successfully deleted \`${"count"}\` records, your role mappings are now cleared.`;
 
-export const rankRoleClearYes: Button = {
-  id: "rank-role-clear-yes",
+export const rankRoleClearYes: ButtonHandler = {
+  id: ButtonId.RankRoleClearConfirm,
   async execute(interaction) {
     const bot = interaction.client;
 

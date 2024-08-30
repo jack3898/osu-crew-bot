@@ -12,7 +12,7 @@
   "[html]": {
     "editor.formatOnSave": true
   },
-  "[yml]": {
+  "[yaml]": {
     "editor.formatOnSave": true
   },
   "[css]": {

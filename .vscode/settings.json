@@ -12,6 +12,9 @@
   "[html]": {
     "editor.formatOnSave": true
   },
+  "[yml]": {
+    "editor.formatOnSave": true
+  },
   "[css]": {
     "editor.formatOnSave": true
   },

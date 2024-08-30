@@ -20,7 +20,12 @@ const bot = new Bot(
       GatewayIntentBits.GuildMembers,
     ],
   },
-  { url: env.DATABASE_URL },
+  {
+    url: env.DATABASE_URL,
+    ...(env.OPTIONAL_DATABASE_AUTH_TOKEN
+      ? { authToken: env.OPTIONAL_DATABASE_AUTH_TOKEN }
+      : {}),
+  },
 );
 
 // Make the commands known to the bot

@@ -10,6 +10,7 @@ export const envSchema = z.object({
   OSU_REDIRECT_URI: z.string(),
   JWT_SECRET: z.string(),
   DATABASE_URL: z.string(),
+  OPTIONAL_DATABASE_AUTH_TOKEN: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

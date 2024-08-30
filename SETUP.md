@@ -28,6 +28,26 @@ The static SPA is used for OAuth purposes so users can authorize their Osu! acco
 - `npm run build -w bot`
 - `npm run start -w bot`
 
+#### Initialize DB (Windows)
+
+Unauthenticated DB:
+
+- Run `$env:DATABASE_URL=[DB_URL_HERE]; npm run db:push -w bot`
+
+Authenticated DB:
+
+- Run `$env:DATABASE_URL=[DB_URL_HERE]; DATABASE_AUTH_TOKEN=[DB_AUTH_TOKEN]; npm run db:push -w bot`
+
+#### Initialize DB (POSIX)
+
+Unauthenticated DB:
+
+- Run `DATABASE_URL=[DB_URL_HERE] && npm run db:push -w bot`
+
+Authenticated DB:
+
+- Run `DATABASE_URL=[DB_URL_HERE] && DATABASE_AUTH_TOKEN=[DB_AUTH_TOKEN] && npm run db:push -w bot`
+
 It is recommended to have a process manager/daemon to keep your bot online in case it crashes.
 
 ### Pages

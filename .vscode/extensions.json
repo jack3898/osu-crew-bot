@@ -2,6 +2,8 @@
   "recommendations": [
     "esbenp.prettier-vscode",
     "vitest.explorer",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "ms-azuretools.vscode-docker",
+    "github.vscode-github-actions"
   ]
 }

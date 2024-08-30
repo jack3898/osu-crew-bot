@@ -9,6 +9,7 @@ const self = dirname(fileURLToPath(import.meta.url));
 export const MIGRATIONS_DIR = resolve(self, "migrations");
 
 export const dbUrlSchema = z.string().default("file:.data/database.db");
+export const dbAuthTokenSchema = z.string().optional();
 
 export async function runMigration(): Promise<void> {
   const client = createClient({

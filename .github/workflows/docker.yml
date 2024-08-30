@@ -2,9 +2,6 @@ name: Build bot docker image
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - container-build
 
 permissions:
   contents: read

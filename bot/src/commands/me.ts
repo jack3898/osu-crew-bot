@@ -29,7 +29,7 @@ export const me: Command = {
 
     interaction.reply(
       hide(
-        `Hey, ${user.username}! I see you're rank ${user.rank_history.data.at(-1)}, not too shabby.`,
+        `Hey, **${user.username}**! I see you're rank \`${user.rank_history.data.at(-1)}\`, very nice!`,
       ),
     );
   },

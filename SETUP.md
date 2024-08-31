@@ -1,79 +1,160 @@
 # Setup
 
-This projects has two sub-projects:
+This guide will show you how to setup the bot for _development_ and _production_.
 
-- The bot itself
-- A static SPA application
-
-The static SPA is used for OAuth purposes so users can authorize their Osu! accounts with the bot.
-
-## Prerequisites
-
-- You will need Node.js with npm preferably using the latest LTS.
-- A public URL you plan to use to home the static site.
-- An OAuth app created in your Osu! account.
-- A Discord bot application created.
-  - With the privileged guild members gateway intent enabled.
-- Generate a long and secure JWT secret token (which can be anything), using a cryptographically secure method.
-- Copy and rename example.env to .env, and fill in the required fields using the various credentials you have just created.
-- Create a `DATABASE_URL` in your **system** environment variables. If it's local use this as a value `file:<path to file here>`.
+Both routes are quite different in their setups!
 
 ## Setup for production
 
-### Bot
+The production build of this bot will utilize several technologies. It does sound complicated, but this bot wraps it all up into one package for you so once it's done you won't have to micro-manage a dedicated server yourself - everything is automated.
 
-- `npm install`
-- `npm run db:push -w bot` (to initialize a db)
-- Select `Yes, I want to execute all statements`
-- `npm run build -w bot`
-- `npm run start -w bot`
+Areas we will cover:
 
-#### Initialize DB (Windows)
+- GitHub Actions
+- Kubernetes
+- SQLite hosting
+- Cloud hosting
+- Discord Bot configuration
+- Creating your own Osu! application
 
-Unauthenticated DB:
+Providers you will need an account on:
 
-- Run `$env:DATABASE_URL=[DB_URL_HERE]; npm run db:push -w bot`
+- <a href="https://turso.tech/" target="_blank">Turso</a> (DB host, no credit card required, free for up to 9GB storage 1bn reads)
+- <a href="https://www.linode.com/" target="_blank">Linode</a> (Cloud host, not free, credit card required $12/mo to get started)
+- GitHub (Free, no credit card required, 2000 mins of server time)
+- Discord (Free, ofc)
+- Osu! (Free also!)
 
-Authenticated DB:
+### Create a Discord Bot application
 
-- Run `$env:DATABASE_URL=[DB_URL_HERE]; DATABASE_AUTH_TOKEN=[DB_AUTH_TOKEN]; npm run db:push -w bot`
+There are several guides online on how to do this. I won't be going into creating the bot, and inviting it to your Discord. But you should have the bot invited to a server in an offline state.
 
-#### Initialize DB (POSIX)
+You need to go to the <a href="https://discord.com/developers" target="_blank">Discord developer portal</a> and ensure your bot has the following:
 
-Unauthenticated DB:
+- Privileged intent: **Server members intent**
+- `applications.commands` permission
 
-- Run `DATABASE_URL=[DB_URL_HERE] && npm run db:push -w bot`
+Make note of the following:
 
-Authenticated DB:
+- Bot token (call it `DISCORD_TOKEN`)
+- Application ID (call it `DISCORD_CLIENT_ID`)
 
-- Run `DATABASE_URL=[DB_URL_HERE] && DATABASE_AUTH_TOKEN=[DB_AUTH_TOKEN] && npm run db:push -w bot`
+### Create an Osu! OAuth2 application
 
-It is recommended to have a process manager/daemon to keep your bot online in case it crashes.
+Log in to your Osu! account, go to profile settings, and create a new OAuth application.
 
-### Pages
+- Set the name to anything you like
+- Set the callback url to https://**[your github username here]**.github.io/**[your repository name here]**
 
-The site is a React application. This site is used for OAuth 2.0 authorization with the bot.
+Make note of the following:
 
-- `npm run build -w pages`
-- Copy the pages/dist to your public web server.
+- Callback URL (call it `OSU_REDIRECT_URI`)
+- Client ID (call it: `OSU_CLIENT_ID`)
+- Client secret (call it: `OSU_CLIENT_SECRET`)
+
+### Create a Turso SQLite database
+
+Log in to Turso, and create a basic database.
+
+Make note of the following:
+
+- The database URL (call it: `DATABASE_URL`)
+- The database token, you will need to generate this on Turso. (Call it `OPTIONAL_DATABASE_AUTH_TOKEN`)
+
+Even though the name says "optional", in this case it isn't but the code supports its omission for environments with an unauthenticated DB. We do need it here, do not change the name.
+
+Now, we need to initialize the DB, create the tables and schema:
+
+- Download an install <a href="https://volta.sh/" target="_blank">Volta</a> and Git
+- `git clone` your repo
+- `cd` to where the repo is
+- run `npm i`
+- If on Windows, run: `$env:DATABASE_URL="[DB_URL_HERE]"; DATABASE_AUTH_TOKEN="[DB_AUTH_TOKEN_HERE]"; npm run db:push -w bot`
+- If on Linux/Mac, run: `DATABASE_URL="[DB_URL_HERE]" && DATABASE_AUTH_TOKEN="[DB_AUTH_TOKEN]" && npm run db:push -w bot`
+
+_Running database pushes and migrations is a manual process but you should only need to do this when the db updates or changes its schema with updates._
+
+### Create a Linode Kubernetes cluster
+
+Log in to Linode, click on "Kubernetes" and create a new cluster. For now, just assign the cluster one node. You will be warned 3 are recommended for minimal downtime but 1 is actually enough for this bot.
+
+Wait for the provisioning, then copy the contents of the provided `*-kubeconfig.yaml` file.
+
+Make note of the following:
+
+- Kubeconfig yaml content (call it: `KUBECONFIG`)
+
+### Generate a manual values
+
+Using a password manager, or trusted tool, generate a very long random string I recommend no less than 30 characters.
+
+Make note of the following:
+
+- The secret (call it `JWT_SECRET`)
+
+**other things**
+
+- Note `NODE_ENV` and its value is `production`
+- Note `IMAGE` and set its value to ghcr.io/**[your github username here]**/**[your github repo name here]**:bot
+
+### Setup GitHub
+
+Go to your repository settings and click "Pages". make sure Pages is enabled with the source "GitHub Actions".
+
+Now go to "Secrets and variables". If you followed the above you should be able to add the values with EXACTLY these keys:
+
+**Secrets**:
+
+- DATABASE_URL
+- DISCORD_CLIENT_ID
+- DISCORD_TOKEN
+- JWT_SECRET
+- KUBECONFIG
+- NODE_ENV
+- OPTIONAL_DATABASE_AUTH_TOKEN
+- OSU_CLIENT_ID
+- OSU_CLIENT_SECRET
+
+**Variables**:
+
+- IMAGE
+- OSU_REDIRECT_URI
+
+Some things in the secrets list aren't really secret (like NODE_ENV), I have yet to go through and re-organize these. 🤣
+
+### Moment of truth... deploying! 🚀]
+
+Run IN THE FOLLOWING ORDER:
+
+**Docker image build**
+
+- Go to your repo and click on the "Actions" tab.
+- On the left side click the "Build bot docker image" option
+- Click "Run workflow" and then "Run workflow" again on "main"
+- Wait for that to finish and hopefully go green
+
+**Docker image deploy**
+
+- On the left side again, click "Deploy bot docker image"
+- Click "Run workflow" and then "Run workflow" again on "main"
+- This uses the image build above, and sends it to the cloud (the Kubernetes cluster you setup)
+- Wait for that to hopefully go green, your bot should appear online in your Discord server
+
+**Deploy webpage**
+
+This webpage is used as a stage during OAuth authorization, users log in with their Osu! account using a command, and authorize the bot to read their Osu! profile.
+
+- On the left side lastly, click "Deploy static content to GitHub Pages"
+- Wait for that to go green, you should now be able to visit https://**[your github username here]**.github.io/**[your repository name here]** and see a webpage
+
+### And done!
+
+You've officially deployed a basic Kubernetes-based Discord bot!
+
+To update it, sync your fork with the base repository, then run the three deploy steps again.
+
+If you know anything about GitHub actions, feel free to configure to run on repo change instead of button click for even more automation!
 
 ## Setup for development
 
-For development, install <a href="https://volta.sh/">Volta</a>. Or use the Node and npm versions defined in the package.json.
-
-Ensure your Osu! callback URL when setting up the OAuth 2.0 application on Osu!'s side is `http://localhost:5173` and this value is also in the .env file (`OSU_REDIRECT_URI`).
-
-To test slash commands straight away you will need to define `OPTIONAL_DISCORD_GUILD_ID` in the .env file. Otherwise slash commands will be global and take up to an hour to propagate.
-
-- `npm install`
-- `npm run dev -w pages`
-- `npm run db:push -w bot` (to initialize a db)
-- Select `Yes, I want to execute all statements`
-- `npm run dev -w bot`
-
-## Database info
-
-This bot uses Sqlite for the database (so you can use Turso as a cloud host).
-
-Please set `DATABASE_URL` as an environment variable. If you want the db to be a local file, using `file:.data/database.db` is recommended.
-This environment veriable should not be in `.env`, so you will need to set it on your system. This is because this environment variable is read in different contexts, i.e. during migration, pushing and when the bot runs.
+Coming soon

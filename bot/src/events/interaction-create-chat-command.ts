@@ -27,7 +27,7 @@ export async function handleInteractionCreateChatCommand(
       bot.recentEngagements.get(interaction.user.id) &&
       env.NODE_ENV !== "development"
     ) {
-      await interaction.reply("You're going too fast!");
+      await interaction.reply(hide("You're going too fast!"));
 
       bot.recentEngagements.set(interaction.user.id, true);
 

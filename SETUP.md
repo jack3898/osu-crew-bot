@@ -105,24 +105,21 @@ Now go to "Secrets and variables". If you followed the above you should be able 
 
 **Secrets**:
 
-- DATABASE_URL
-- DISCORD_CLIENT_ID
 - DISCORD_TOKEN
 - JWT_SECRET
 - KUBECONFIG
-- NODE_ENV
 - OPTIONAL_DATABASE_AUTH_TOKEN
-- OSU_CLIENT_ID
 - OSU_CLIENT_SECRET
 
 **Variables**:
 
+- DATABASE_URL
+- DISCORD_CLIENT_ID
 - IMAGE
+- OSU_CLIENT_ID
 - OSU_REDIRECT_URI
 
-Some things in the secrets list aren't really secret (like NODE_ENV), I have yet to go through and re-organize these. 🤣
-
-### Moment of truth... deploying! 🚀]
+### Moment of truth... deploying! 🚀
 
 Run IN THE FOLLOWING ORDER:
 

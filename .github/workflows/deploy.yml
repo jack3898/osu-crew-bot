@@ -45,3 +45,6 @@ jobs:
           --set osu_crew_bot.image="'${IMAGE}'" \
           --set osu_crew_bot.mem_limit=512Mi \
           --set osu_crew_bot.cpu_limit=250m
+      - name: Restart rollout
+        run: |
+          kubectl rollout restart deployment osu-crew-bot -n production

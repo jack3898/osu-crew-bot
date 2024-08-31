@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osu-crew-bot
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: osu-crew-bot
+  template:
+    metadata:
+      labels:
+        app: osu-crew-bot
+    spec:
+      replicas: 1
+      containers:
+        - name: osu-crew-bot
+          image: {{.Values.osu_crew_bot.image}}
+          imagePullPolicy: Always
+          resources:
+            # Checks host first for resources
+            requests:
+              cpu: {{.Values.osu_crew_bot.cpu_limit}}
+              memory: {{.Values.osu_crew_bot.mem_limit}}
+            # Then wants these limits
+            # Resuest smaller than limit is not recommended
+            limits:
+              memory: {{.Values.osu_crew_bot.mem_limit}}
+              cpu: {{.Values.osu_crew_bot.cpu_limit}}
+          env:
+            - name: DISCORD_TOKEN
+              value: {{.Values.osu_crew_bot.DISCORD_TOKEN}}
+            - name: DISCORD_CLIENT_ID
+              value: {{.Values.osu_crew_bot.DISCORD_CLIENT_ID}}
+            - name: NODE_ENV
+              value: {{.Values.osu_crew_bot.NODE_ENV}}
+            - name: OSU_CLIENT_ID
+              value: {{.Values.osu_crew_bot.OSU_CLIENT_ID}}
+            - name: OSU_CLIENT_SECRET
+              value: {{.Values.osu_crew_bot.OSU_CLIENT_SECRET}}
+            - name: OSU_REDIRECT_URI
+              value: {{.Values.osu_crew_bot.OSU_REDIRECT_URI}}
+            - name: JWT_SECRET
+              value: {{.Values.osu_crew_bot.JWT_SECRET}}
+            - name: DATABASE_URL
+              value: {{.Values.osu_crew_bot.DATABASE_URL}}
+            - name: OPTIONAL_DATABASE_AUTH_TOKEN
+              value: {{.Values.osu_crew_bot.OPTIONAL_DATABASE_AUTH_TOKEN}}

@@ -4,6 +4,7 @@
     "vitest.explorer",
     "dbaeumer.vscode-eslint",
     "ms-azuretools.vscode-docker",
-    "github.vscode-github-actions"
+    "github.vscode-github-actions",
+    "tim-koehler.helm-intellisense"
   ]
 }

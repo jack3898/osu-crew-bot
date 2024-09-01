@@ -16,6 +16,10 @@ _I will not send any further DM's unless it is required._
 
 export async function handleGuildMemberAdd(member: GuildMember): Promise<void> {
   try {
+    if (member.user.bot) {
+      return;
+    }
+
     await member.send(message({ username: member.user.username }));
   } catch (error) {
     console.error("Unable to send user an intro DM", error);

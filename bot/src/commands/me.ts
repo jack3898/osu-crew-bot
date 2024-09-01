@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { getOsuApiClient } from "../services/user-service.js";
-import { hide } from "../utils/message.js";
+import { createUserEmbed, hide } from "../utils/message.js";
 
 export const me: Command = {
   definition: new SlashCommandBuilder().setName("me").setDescription("You!"),
@@ -27,10 +27,8 @@ export const me: Command = {
       );
     }
 
-    interaction.reply(
-      hide(
-        `Hey, **${user.username}**! I see you're rank \`${user.rank_history.data.at(-1)}\`, very nice!`,
-      ),
-    );
+    const userEmbed = createUserEmbed(user);
+
+    await interaction.reply({ embeds: [userEmbed] });
   },
 };

@@ -55,6 +55,9 @@ export function createUserEmbed(user: UserExtended): EmbedBuilder {
   const countryRankFormatted = country_rank?.toLocaleString() ?? "Unknown";
   const hitAccuracyWithComment = `\`${hit_accuracy.toPrecision(4)}%\` (${accuracyComment(hit_accuracy)})`;
   const playCountWithComment = `\`${play_count.toLocaleString()}\` (${playCountComment(play_count)})`;
+  const peakRankAchievedToday =
+    !!rank_highest &&
+    new Date(rank_highest.updated_at).getDay() === new Date().getDay();
 
   const embed = new EmbedBuilder()
     .setTitle(`About ${username}`)
@@ -70,7 +73,7 @@ export function createUserEmbed(user: UserExtended): EmbedBuilder {
       },
       {
         name: "**Peak rank** 📈",
-        value: `${peakRankFormatted}\nSince ${peakRankUpdated}`,
+        value: `${peakRankFormatted}\nSince ${peakRankUpdated}${peakRankAchievedToday ? " **(today! 🎉)**" : ""}`,
         inline: true,
       },
       {

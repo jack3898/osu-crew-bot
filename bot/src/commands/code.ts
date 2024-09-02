@@ -7,7 +7,6 @@ import {
   exchangeOsuOAuth2CodeAndSaveToDb,
   getOsuApiClient,
 } from "../services/user-service.js";
-import { hide } from "../utils/message.js";
 
 export const code: Command = {
   definition: new SlashCommandBuilder()
@@ -31,13 +30,15 @@ export const code: Command = {
 
     assertBot(bot);
 
+    await interaction.deferReply({ ephemeral: true });
+
     // This helps prevent the code from being exchanged by users who haven't started the OAuth2 flow
     if (!bot.oauthState.exists(interaction.user.id)) {
-      return interaction.reply(hide("Please use the `/link` command first!"));
+      return interaction.followUp("Please use the `/link` command first!");
     }
 
     if (!bot.oauthState.valid(interaction.user.id)) {
-      return interaction.reply(hide("Please wait before trying again."));
+      return interaction.followUp("Please wait before trying again.");
     }
 
     bot.oauthState.use(interaction.user.id);
@@ -51,7 +52,7 @@ export const code: Command = {
     const { code, state } = decodeCode(userProvidedCode.value);
 
     if (!code || !state) {
-      return interaction.reply(hide("The provided code is invalid."));
+      return interaction.followUp("The provided code is invalid.");
     }
 
     // This JWT cannot be tampered with, as it is signed with a secret only the bot knows
@@ -59,10 +60,8 @@ export const code: Command = {
     const verifiedState = await jwt.verify(state);
 
     if (verifiedState.discordUserId !== interaction.user.id) {
-      return interaction.reply(
-        hide(
-          "This code is not for you. Please use the `/link` command for your own account.",
-        ),
+      return interaction.followUp(
+        "This code is not for you. Please use the `/link` command for your own account.",
       );
     }
 
@@ -73,8 +72,8 @@ export const code: Command = {
     );
 
     if (!result) {
-      return interaction.reply(
-        hide("There was an error exchanging the code for an access token."),
+      return interaction.followUp(
+        "There was an error exchanging the code for an access token.",
       );
     }
 
@@ -83,9 +82,9 @@ export const code: Command = {
     const username = osuUser.username;
 
     if (!username) {
-      return interaction.reply(hide("There was an error fetching your rank."));
+      return interaction.followUp("There was an error fetching your rank.");
     }
 
-    await interaction.reply(hide(`Hey, ${username}! 🥳 All done!`));
+    await interaction.followUp(`Hey, ${username}! 🥳 All done!`);
   },
 };

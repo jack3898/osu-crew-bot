@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { getOsuApiClient } from "../services/user-service.js";
-import { createUserEmbed, hide } from "../utils/message.js";
+import { createUserEmbed } from "../utils/message.js";
 
 export const me: Command = {
   definition: new SlashCommandBuilder().setName("me").setDescription("You!"),
@@ -10,6 +10,8 @@ export const me: Command = {
     const bot = interaction.client;
 
     assertBot(bot);
+
+    await interaction.deferReply();
 
     const osuClient = await getOsuApiClient(
       undefined,
@@ -20,15 +22,13 @@ export const me: Command = {
     const user = await osuClient?.users.getSelf();
 
     if (!user) {
-      return interaction.reply(
-        hide(
-          "I do not know who you are yet. 🥲 Use `/link` to link your Osu! account!",
-        ),
+      return interaction.followUp(
+        "I do not know who you are yet. 🥲 Use `/link` to link your Osu! account!",
       );
     }
 
     const userEmbed = createUserEmbed(user);
 
-    await interaction.reply({ embeds: [userEmbed] });
+    await interaction.followUp({ embeds: [userEmbed] });
   },
 };

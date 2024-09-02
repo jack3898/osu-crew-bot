@@ -28,6 +28,7 @@ export function createUserEmbed(user: UserExtended): EmbedBuilder {
     rank_highest,
     join_date,
     playmode,
+    id,
     statistics: {
       pp,
       ranked_score,
@@ -56,31 +57,31 @@ export function createUserEmbed(user: UserExtended): EmbedBuilder {
   const playCountWithComment = `\`${play_count.toLocaleString()}\` (${playCountComment(play_count)})`;
 
   const embed = new EmbedBuilder()
-    .setTitle(`About ${username}`)
+    .setTitle(`About ${username})`)
     .setThumbnail(avatar_url)
     .setDescription(
-      `${username} joined Osu! in ${joinDateFormatted} and prefers **${playmodeFormatted}**.`,
+      `[${username}](https://osu.ppy.sh/users/${id}) joined Osu! in ${joinDateFormatted} and prefers **${playmodeFormatted}**.`,
     )
     .addFields([
       {
-        name: "**Global rank**",
+        name: "**Global rank** 🌍",
         value: globalRankFormatted,
         inline: true,
       },
       {
-        name: "**Peak rank**",
+        name: "**Peak rank** 📈",
         value: `${peakRankFormatted}\nSince ${peakRankUpdated}`,
         inline: true,
       },
       {
-        name: "**pp**",
+        name: "**pp** 🍆",
         value: Math.round(pp).toLocaleString(),
         inline: true,
       },
       {
         name: "More stats",
         value: [
-          `- Country rank (:flag_${user.country_code.toLowerCase()}:) \`${countryRankFormatted}\``,
+          `- Country rank :flag_${user.country_code.toLowerCase()}:: \`${countryRankFormatted}\``,
           `- Max combo: \`${maximum_combo.toLocaleString()}\``,
           `- Ranked score: \`${ranked_score.toLocaleString()}\``,
           `- Hit accuracy: ${hitAccuracyWithComment}`,

@@ -4,7 +4,7 @@ import { assertBot } from "../utils/assert.js";
 import { getOsuApiClient } from "../services/user-service.js";
 import { getRankRoles } from "../services/rank-role-service.js";
 import { template } from "../utils/template.js";
-import { hide, prettyRole } from "../utils/message.js";
+import { prettyRole } from "../utils/message.js";
 
 const success = template`Congratulations! I think you are deserving of the following roles:
 
@@ -21,6 +21,8 @@ export const role: Command = {
 
     assertBot(bot);
 
+    await interaction.deferReply({ ephemeral: true });
+
     const osuClient = await getOsuApiClient(
       undefined,
       interaction.user.id,
@@ -28,10 +30,8 @@ export const role: Command = {
     );
 
     if (!osuClient) {
-      return interaction.reply(
-        hide(
-          "I do not know who you are yet. Please link your account first with `/link`!",
-        ),
+      return interaction.followUp(
+        "I do not know who you are yet. Please link your account first with `/link`!",
       );
     }
 
@@ -39,15 +39,13 @@ export const role: Command = {
     const rank = user?.rank_history.data.at(-1);
 
     if (!rank || !interaction.guildId) {
-      return interaction.reply(hide("There was an error fetching your rank."));
+      return interaction.followUp("There was an error fetching your rank.");
     }
 
     const dbRoles = await getRankRoles(bot.db, interaction.guildId, rank);
 
     if (!dbRoles.length) {
-      return interaction.reply(
-        hide("I couldn't find the best role for you. 😢"),
-      );
+      return interaction.followUp("I couldn't find the best role for you. 😢");
     }
 
     // Check the client can manage roles
@@ -66,14 +64,12 @@ export const role: Command = {
       );
     }
 
-    return interaction.reply(
-      hide(
-        success({
-          rolelist: dbRoles
-            .map((dbRole) => `- ${prettyRole(dbRole.role_id)}`)
-            .join("\n"),
-        }),
-      ),
+    return interaction.followUp(
+      success({
+        rolelist: dbRoles
+          .map((dbRole) => `- ${prettyRole(dbRole.role_id)}`)
+          .join("\n"),
+      }),
     );
   },
 };

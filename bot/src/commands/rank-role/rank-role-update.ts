@@ -1,6 +1,6 @@
 import type { ChatInputCommandInteraction } from "discord.js";
 import { assertBot } from "../../utils/assert.js";
-import { hide, prettyRole } from "../../utils/message.js";
+import { prettyRole } from "../../utils/message.js";
 import {
   getRankRoleById,
   updateRankRole as updateRankRoleDb,
@@ -21,11 +21,9 @@ export async function updateRankRole(
     return;
   }
 
-  const id = interaction.options.getInteger("id", true);
+  await interaction.deferReply({ ephemeral: true });
 
-  // TODO: it's possible to bypass the checks performed in the add rank role command
-  // I should create a utility that is reused here and in the add rank role to verify
-  // That the updated values are still valid (i.e. max not being smaller than min etc.)
+  const id = interaction.options.getInteger("id", true);
 
   const currentRankRole = await getRankRoleById(bot.db, id);
 
@@ -33,8 +31,8 @@ export async function updateRankRole(
   const currentMaxRank = currentRankRole?.max_requirement;
 
   if (!currentMinRank || !currentMaxRank) {
-    return interaction.reply(
-      hide("I cannot find the current rank values to update!"),
+    return interaction.followUp(
+      "I cannot find the current rank values to update!",
     );
   }
 
@@ -44,8 +42,8 @@ export async function updateRankRole(
     interaction.options.getInteger("max-rank") ?? currentMaxRank;
 
   if (!positiveInt(proposedMinRank) || !positiveInt(proposedMaxRank)) {
-    return interaction.reply(
-      hide("The rank requirements must be greater than 0."),
+    return interaction.followUp(
+      "The rank requirements must be greater than 0.",
     );
   }
 
@@ -57,10 +55,8 @@ export async function updateRankRole(
   );
 
   if (!verifyResult) {
-    return interaction.reply(
-      hide(
-        "The maximum rank requirement must be greater than or equal to the minimum.",
-      ),
+    return interaction.followUp(
+      "The maximum rank requirement must be greater than or equal to the minimum.",
     );
   }
 
@@ -71,21 +67,17 @@ export async function updateRankRole(
   });
 
   if (!rankRole) {
-    return interaction.reply(
-      hide(
-        "I didn't manage to update any rank role. This is probably a bug! 😨",
-      ),
+    return interaction.followUp(
+      "I didn't manage to update any rank role. This is probably a bug! 😨",
     );
   }
 
-  return interaction.reply(
-    hide(
-      updateSuccess({
-        id: rankRole.id,
-        min: rankRole.min_requirement,
-        max: rankRole.max_requirement,
-        role: prettyRole(rankRole.role_id),
-      }),
-    ),
+  return interaction.followUp(
+    updateSuccess({
+      id: rankRole.id,
+      min: rankRole.min_requirement,
+      max: rankRole.max_requirement,
+      role: prettyRole(rankRole.role_id),
+    }),
   );
 }

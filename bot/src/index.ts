@@ -13,6 +13,7 @@ import { handleInteractionCreateButton } from "./events/interaction-create-butto
 import { handleGuildMemberAdd } from "./events/guild-member-add.js";
 import { unlink } from "./commands/unlink.js";
 import { unlinkConfirm } from "./button-handlers/unlink-confirm.js";
+import { them } from "./commands/them.js";
 
 const bot = new Bot(
   {
@@ -35,6 +36,7 @@ bot.registerSlashCommand(link);
 bot.registerSlashCommand(unlink);
 bot.registerSlashCommand(code);
 bot.registerSlashCommand(me);
+bot.registerSlashCommand(them);
 bot.registerSlashCommand(role);
 bot.registerSlashCommand(rankRole);
 

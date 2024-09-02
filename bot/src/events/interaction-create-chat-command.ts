@@ -42,7 +42,9 @@ export async function handleInteractionCreateChatCommand(
 
     const message = hide("There was an error while completing this command.");
 
-    if (interaction.replied) {
+    if (interaction.deferred) {
+      await interaction.editReply(message);
+    } else if (interaction.replied) {
       await interaction.followUp(message);
     } else {
       await interaction.reply(message);

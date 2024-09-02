@@ -22,4 +22,5 @@ export type ButtonHandler = {
 export const enum ButtonId {
   Disabled = "a",
   RankRoleClearConfirm = "b",
+  UnlinkConfirm = "c",
 }

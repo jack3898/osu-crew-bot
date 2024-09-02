@@ -25,6 +25,10 @@ export function getUserById(db: LibSQLDatabase, id: string) {
   return db.select().from(userTable).where(eq(userTable.id, id)).limit(1);
 }
 
+export function deleteUserById(db: LibSQLDatabase, id: string) {
+  return db.delete(userTable).where(eq(userTable.id, id));
+}
+
 export async function exchangeOsuOAuth2CodeAndSaveToDb(
   db: LibSQLDatabase,
   id: string,

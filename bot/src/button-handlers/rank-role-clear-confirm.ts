@@ -6,7 +6,7 @@ import { template } from "../utils/template.js";
 
 const deleteSuccess = template`Successfully deleted \`${"count"}\` records, your role mappings are now cleared.`;
 
-export const rankRoleClearYes: ButtonHandler = {
+export const rankRoleClearConfirm: ButtonHandler = {
   id: ButtonId.RankRoleClearConfirm,
   async execute(interaction) {
     const bot = interaction.client;

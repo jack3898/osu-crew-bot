@@ -14,7 +14,9 @@ export async function handleInteractionCreateButton(
 
     if (!interaction.client.buttons.has(interaction.customId)) {
       await interaction.reply(
-        "I received a button interaction I do not know how to handle. This is a bug! 😨",
+        hide(
+          "I received a button interaction I do not know how to handle. This is a bug! 😨",
+        ),
       );
 
       return;

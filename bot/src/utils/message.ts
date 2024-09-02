@@ -57,7 +57,7 @@ export function createUserEmbed(user: UserExtended): EmbedBuilder {
   const playCountWithComment = `\`${play_count.toLocaleString()}\` (${playCountComment(play_count)})`;
 
   const embed = new EmbedBuilder()
-    .setTitle(`About ${username})`)
+    .setTitle(`About ${username}`)
     .setThumbnail(avatar_url)
     .setDescription(
       `[${username}](https://osu.ppy.sh/users/${id}) joined Osu! in ${joinDateFormatted} and prefers **${playmodeFormatted}**.`,

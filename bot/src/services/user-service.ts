@@ -3,8 +3,8 @@ import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import { userTable } from "../db-schema.js";
 import { eq } from "drizzle-orm";
 import { exchangeOsuOAuth2Code, refreshOsuOauth2Token } from "../utils/http.js";
-import { addSecondsToDate } from "../utils/add-seconds-to-date.js";
 import { Client as OsuClient } from "osu-web.js";
+import { addSeconds } from "date-fns/addSeconds";
 
 export function upsertUser(
   db: LibSQLDatabase,
@@ -40,7 +40,7 @@ export async function exchangeOsuOAuth2CodeAndSaveToDb(
     await upsertUser(db, {
       id,
       osu_access_token: response.access_token,
-      osu_access_token_exp: addSecondsToDate(
+      osu_access_token_exp: addSeconds(
         new Date(),
         response.expires_in - 300, // Adds some leeway so this bot asks for a new one a bit sooner to prevent any edge cases
       ),
@@ -64,7 +64,7 @@ export async function refreshTokenAndSaveToDb(
     await upsertUser(db, {
       id,
       osu_access_token: response.access_token,
-      osu_access_token_exp: addSecondsToDate(
+      osu_access_token_exp: addSeconds(
         new Date(),
         response.expires_in - 300, // Adds some leeway so this bot asks for a new one a bit sooner to prevent any edge cases
       ),

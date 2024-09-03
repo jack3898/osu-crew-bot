@@ -2,6 +2,8 @@ import { format } from "date-fns/format";
 import { EmbedBuilder } from "discord.js";
 import type { UserExtended } from "osu-web.js";
 import { accuracyComment, convertMode, playCountComment } from "./osu.js";
+import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
+import { differenceInDays } from "date-fns/differenceInDays";
 
 /**
  * Dead simple convenience utility for making Discord messages ephemeral.
@@ -50,14 +52,14 @@ export function createUserEmbed(user: UserExtended): EmbedBuilder {
     : "Unknown";
   const peakRankFormatted = rank_highest?.rank?.toLocaleString() ?? "Unknown";
   const peakRankUpdated = rank_highest?.updated_at
-    ? format(new Date(rank_highest.updated_at), "do MMMM yyyy")
+    ? formatDistanceToNow(new Date(rank_highest.updated_at))
     : "Unknown";
   const countryRankFormatted = country_rank?.toLocaleString() ?? "Unknown";
   const hitAccuracyWithComment = `\`${hit_accuracy.toPrecision(4)}%\` (${accuracyComment(hit_accuracy)})`;
   const playCountWithComment = `\`${play_count.toLocaleString()}\` (${playCountComment(play_count)})`;
-  const peakRankAchievedToday =
-    !!rank_highest &&
-    new Date(rank_highest.updated_at).getDay() === new Date().getDay();
+  const peakRankUpdatedToday = rank_highest?.updated_at
+    ? differenceInDays(new Date(), new Date(rank_highest.updated_at)) === 0
+    : false;
 
   const embed = new EmbedBuilder()
     .setTitle(`About ${username}`)
@@ -73,7 +75,7 @@ export function createUserEmbed(user: UserExtended): EmbedBuilder {
       },
       {
         name: "**Peak rank** 📈",
-        value: `${peakRankFormatted}\nSince ${peakRankUpdated}${peakRankAchievedToday ? " **(today! 🎉)**" : ""}`,
+        value: `${peakRankFormatted}\n_${peakRankUpdated} ago_${peakRankUpdatedToday ? "\n🥳" : ""}`,
         inline: true,
       },
       {

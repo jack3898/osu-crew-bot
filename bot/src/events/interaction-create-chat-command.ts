@@ -1,7 +1,7 @@
 import type { CacheType, Interaction } from "discord.js";
 import { assertBot } from "../utils/assert.js";
 import { env } from "../env.js";
-import { hide } from "../utils/message.js";
+import { hide, safeReply } from "../utils/message.js";
 
 export async function handleInteractionCreateChatCommand(
   interaction: Interaction<CacheType>,
@@ -40,14 +40,9 @@ export async function handleInteractionCreateChatCommand(
   } catch (error) {
     console.error(error);
 
-    const message = hide("There was an error while completing this command.");
-
-    if (interaction.deferred) {
-      await interaction.editReply(message);
-    } else if (interaction.replied) {
-      await interaction.followUp(message);
-    } else {
-      await interaction.reply(message);
-    }
+    await safeReply(
+      interaction,
+      hide("There was an error while completing this command."),
+    );
   }
 }

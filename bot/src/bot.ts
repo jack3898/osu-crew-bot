@@ -1,5 +1,8 @@
 import { env } from "./env.js";
-import type { ButtonHandler, Command } from "./types.js";
+import type {
+  InteractiveElementHandler as InteractiveElementHandler,
+  Command,
+} from "./types.js";
 import {
   Client,
   REST,
@@ -19,7 +22,10 @@ export class Bot extends Client {
   }
 
   readonly commands = new Collection<PropertyKey, Command>();
-  readonly buttons = new Collection<string, ButtonHandler>();
+  readonly interactionComponents = new Collection<
+    string,
+    InteractiveElementHandler
+  >();
   readonly rest = new REST();
   readonly oauthState = new OAuthTTL<string>({ ttl: 1000 * 60 * 1 });
   readonly recentEngagements = new TTLCache<string, boolean>({ ttl: 5_000 });
@@ -32,8 +38,16 @@ export class Bot extends Client {
     this.commands.set(command.definition.name, command);
   }
 
-  registerButton(modal: ButtonHandler): void {
-    this.buttons.set(modal.id, modal);
+  registerInteractiveElement(
+    interactiveElement: InteractiveElementHandler,
+  ): void {
+    if (this.interactionComponents.has(interactiveElement.id)) {
+      throw new Error(
+        `An interactive element with the ID ${interactiveElement.id} already exists`,
+      );
+    }
+
+    this.interactionComponents.set(interactiveElement.id, interactiveElement);
   }
 
   /**

@@ -2,10 +2,10 @@ import type { CacheType, Interaction } from "discord.js";
 import { assertBot } from "../utils/assert.js";
 import { hide, safeReply } from "../utils/message.js";
 
-export async function handleInteractionCreateButton(
+export async function handleInteractionCreateDropdown(
   interaction: Interaction<CacheType>,
 ): Promise<void> {
-  if (!interaction.isButton()) {
+  if (!interaction.isAnySelectMenu()) {
     return;
   }
 
@@ -16,10 +16,10 @@ export async function handleInteractionCreateButton(
       interaction.customId,
     );
 
-    if (!interactionHandler || interactionHandler.type !== "button") {
+    if (!interactionHandler || interactionHandler.type !== "dropdown") {
       await interaction.reply(
         hide(
-          "I received a button interaction I do not know how to handle. This is a bug! 😨",
+          "I received an interaction I do not know how to handle. This is a bug! 😨",
         ),
       );
 

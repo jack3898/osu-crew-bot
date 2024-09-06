@@ -1,5 +1,10 @@
 import { format } from "date-fns/format";
-import { EmbedBuilder } from "discord.js";
+import {
+  EmbedBuilder,
+  type AnySelectMenuInteraction,
+  type ButtonInteraction,
+  type CommandInteraction,
+} from "discord.js";
 import type { UserExtended } from "osu-web.js";
 import { accuracyComment, convertMode, playCountComment } from "./osu.js";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
@@ -101,4 +106,20 @@ export function createUserEmbed(user: UserExtended): EmbedBuilder {
   }
 
   return embed;
+}
+
+export async function safeReply(
+  interaction:
+    | CommandInteraction
+    | ButtonInteraction
+    | AnySelectMenuInteraction,
+  message: { content: string; ephemeral: boolean } | string,
+): Promise<void> {
+  if (interaction.deferred) {
+    await interaction.editReply(message);
+  } else if (interaction.replied) {
+    await interaction.followUp(message);
+  } else {
+    await interaction.reply(message);
+  }
 }

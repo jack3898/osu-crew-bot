@@ -1,12 +1,10 @@
 import { deleteAllRankRoles } from "../services/rank-role-service.js";
-import { ButtonId, type ButtonHandler } from "../types.js";
+import { ButtonId, type InteractiveElementHandler } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 import { hide } from "../utils/message.js";
-import { template } from "../utils/template.js";
 
-const deleteSuccess = template`Successfully deleted \`${"count"}\` records, your role mappings are now cleared.`;
-
-export const rankRoleClearConfirm: ButtonHandler = {
+export const rankRoleClearConfirm: InteractiveElementHandler = {
+  type: "button",
   id: ButtonId.RankRoleClearConfirm,
   async execute(interaction) {
     const bot = interaction.client;
@@ -26,7 +24,9 @@ export const rankRoleClearConfirm: ButtonHandler = {
     }
 
     return interaction.reply(
-      hide(deleteSuccess({ count: result.rowsAffected })),
+      hide(
+        `Successfully deleted \`${result.rowsAffected}\` records, your role mappings are now cleared.`,
+      ),
     );
   },
 };

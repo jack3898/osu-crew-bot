@@ -7,13 +7,16 @@ import { env } from "./env.js";
 import { me } from "./commands/me.js";
 import { role } from "./commands/role.js";
 import { rankRole } from "./commands/rank-role/rank-role.js";
-import { rankRoleClearConfirm } from "./button-handlers/rank-role-clear-confirm.js";
+import { rankRoleClearConfirm as rankRoleClearConfirmBtn } from "./interactive-element-handlers/rank-role-clear-confirm-btn.js";
 import { handleInteractionCreateChatCommand } from "./events/interaction-create-chat-command.js";
 import { handleInteractionCreateButton } from "./events/interaction-create-button.js";
 import { handleGuildMemberAdd } from "./events/guild-member-add.js";
 import { unlink } from "./commands/unlink.js";
-import { unlinkConfirm } from "./button-handlers/unlink-confirm.js";
+import { unlinkConfirm as unlinkConfirmBtn } from "./interactive-element-handlers/unlink-confirm-btn.js";
 import { them } from "./commands/them.js";
+import { bountySelectDropdown } from "./interactive-element-handlers/bounty-select-dropdown.js";
+import { bounty } from "./commands/bounty/bounty.js";
+import { handleInteractionCreateDropdown } from "./events/interaction-create-dropdown.js";
 
 const bot = new Bot(
   {
@@ -39,16 +42,19 @@ bot.registerSlashCommand(me);
 bot.registerSlashCommand(them);
 bot.registerSlashCommand(role);
 bot.registerSlashCommand(rankRole);
+bot.registerSlashCommand(bounty);
 
 // Handle button clicks in chat messages
-bot.registerButton(rankRoleClearConfirm);
-bot.registerButton(unlinkConfirm);
+bot.registerInteractiveElement(rankRoleClearConfirmBtn);
+bot.registerInteractiveElement(unlinkConfirmBtn);
+bot.registerInteractiveElement(bountySelectDropdown);
 
 // Tell the bot what to do when certain events occur
 // New event handlers should be registered here
 bot.on(Events.ClientReady, handleReady);
 bot.on(Events.InteractionCreate, handleInteractionCreateChatCommand);
 bot.on(Events.InteractionCreate, handleInteractionCreateButton);
+bot.on(Events.InteractionCreate, handleInteractionCreateDropdown);
 bot.on(Events.GuildMemberAdd, handleGuildMemberAdd);
 
 // Strap things up!

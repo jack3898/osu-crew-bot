@@ -4,6 +4,7 @@ import type {
   SlashCommandBuilder,
   SlashCommandSubcommandsOnlyBuilder,
   ButtonInteraction,
+  AnySelectMenuInteraction,
 } from "discord.js";
 
 export type Command = {
@@ -14,13 +15,24 @@ export type Command = {
   execute(interaction: CommandInteraction): Promise<unknown>;
 };
 
-export type ButtonHandler = {
-  id: ButtonId;
-  execute(interaction: ButtonInteraction): Promise<unknown>;
-};
+export type InteractiveElementHandler =
+  | {
+      type: "button";
+      id: ButtonId;
+      execute(interaction: ButtonInteraction): Promise<unknown>;
+    }
+  | {
+      type: "dropdown";
+      id: DropdownId;
+      execute(interaction: AnySelectMenuInteraction): Promise<unknown>;
+    };
 
 export const enum ButtonId {
   Disabled = "a",
   RankRoleClearConfirm = "b",
   UnlinkConfirm = "c",
+}
+
+export const enum DropdownId {
+  BountyType = "d",
 }

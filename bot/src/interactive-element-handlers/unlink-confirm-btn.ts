@@ -1,8 +1,9 @@
 import { deleteUserById } from "../services/user-service.js";
-import { ButtonId, type ButtonHandler } from "../types.js";
+import { ButtonId, type InteractiveElementHandler } from "../types.js";
 import { assertBot } from "../utils/assert.js";
 
-export const unlinkConfirm: ButtonHandler = {
+export const unlinkConfirm: InteractiveElementHandler = {
+  type: "button",
   id: ButtonId.UnlinkConfirm,
   async execute(interaction) {
     const bot = interaction.client;
